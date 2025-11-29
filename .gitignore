@@ -100,3 +100,4 @@ migrate_sqlite_to_postgres.py
 # Ignore database dumps
 *.dump
 *.sql
+wakeupcalls/env.example
