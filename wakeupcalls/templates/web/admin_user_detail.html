@@ -1,0 +1,677 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}{{ user_detail.email }} - User Details - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .stat-number {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.8em;
+        opacity: 0.9;
+    }
+    .admin-nav {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .admin-nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .admin-nav a:hover {
+        background: #5a67d8;
+        color: white;
+    }
+    .user-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .detail-row {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { font-weight: bold; color: #666; }
+    .activity-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9em;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .status-badge {
+        font-size: 0.8em;
+        padding: 2px 8px;
+        border-radius: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>👤 User Details</h1>
+        <a href="{% url 'web:admin_users' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Users
+        </a>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="{% url 'web:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="{% url 'web:admin_users' %}"><i class="bi bi-people"></i> Users</a>
+        <a href="{% url 'web:admin_logs' %}"><i class="bi bi-file-text"></i> Logs</a>
+        <a href="{% url 'web:admin_demo' %}"><i class="bi bi-database"></i> Demo Data</a>
+        <a href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Django Admin</a>
+    </div>
+
+    <!-- User Header -->
+    <div class="user-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2>{{ user_detail.email }}</h2>
+                <p class="mb-0">
+                    {{ user_detail.first_name }} {{ user_detail.last_name }} | 
+                    {{ user_detail.role|title }} User
+                    {% if user_detail.is_staff %} | Staff{% endif %}
+                    {% if user_detail.is_superuser %} | Superuser{% endif %}
+                </p>
+            </div>
+            <div class="col-md-4 text-right">
+                {% if user_detail.role == 'admin' %}
+                    <span class="badge badge-light badge-lg">👑 Admin</span>
+                {% endif %}
+                {% if user_detail.phone_verified %}
+                    <span class="badge badge-light badge-lg">✅ Verified</span>
+                {% else %}
+                    <span class="badge badge-warning badge-lg">⚠️ Unverified</span>
+                {% endif %}
+                {% if not user_detail.is_active %}
+                    <span class="badge badge-secondary badge-lg">Inactive</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="row">
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.total_calls }}</div>
+                <div class="stat-label">Total Calls</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.active_calls }}</div>
+                <div class="stat-label">Active Calls</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.total_executions }}</div>
+                <div class="stat-label">Total Executions</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.successful_executions }}</div>
+                <div class="stat-label">Successful</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.executions_30d }}</div>
+                <div class="stat-label">Last 30 Days</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.notifications_sent }}</div>
+                <div class="stat-label">Notifications</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- User Details -->
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h5><i class="bi bi-person-badge"></i> Personal Information</h5>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span>{{ user_detail.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Username:</span>
+                    <span>{{ user_detail.username }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Full Name:</span>
+                    <span>{{ user_detail.first_name }} {{ user_detail.last_name|default:"" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Phone Number:</span>
+                    <span>
+                        {{ user_detail.phone_number|default:"Not provided" }}
+                        {% if user_detail.phone_verified %}
+                            <span class="text-success">✓ Verified</span>
+                        {% else %}
+                            <span class="text-warning">⚠ Unverified</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">ZIP Code:</span>
+                    <span>{{ user_detail.zip_code|default:"Not provided" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Timezone:</span>
+                    <span>{{ user_detail.timezone }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Role:</span>
+                    <span>{{ user_detail.role|title }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Account Status:</span>
+                    <span>
+                        {% if user_detail.is_active %}
+                            <span class="text-success">Active</span>
+                        {% else %}
+                            <span class="text-danger">Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Staff Access:</span>
+                    <span>
+                        {% if user_detail.is_staff %}
+                            <span class="text-success">Yes</span>
+                        {% else %}
+                            <span class="text-muted">No</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Superuser:</span>
+                    <span>
+                        {% if user_detail.is_superuser %}
+                            <span class="text-success">Yes</span>
+                        {% else %}
+                            <span class="text-muted">No</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date Joined:</span>
+                    <span>{{ user_detail.date_joined|date:"M d, Y H:i" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Last Login:</span>
+                    <span>
+                        {% if user_detail.last_login %}
+                            {{ user_detail.last_login|date:"M d, Y H:i" }}
+                        {% else %}
+                            <span class="text-muted">Never</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Actions -->
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h5><i class="bi bi-tools"></i> Admin Actions</h5>
+                
+                <div class="row">
+                    {% if not user_detail.phone_verified %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="verify_phone">
+                            <button type="submit" class="btn btn-success btn-block" onclick="return confirm('Manually verify phone for {{ user_detail.email }}?')">
+                                <i class="bi bi-check-circle"></i> Verify Phone
+                            </button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="reset_phone_verification">
+                            <button type="submit" class="btn btn-warning btn-block" onclick="return confirm('Reset phone verification for {{ user_detail.email }}?')">
+                                <i class="bi bi-arrow-clockwise"></i> Reset Phone
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    
+                    {% if user_detail.role != 'admin' %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="make_admin">
+                            <button type="submit" class="btn btn-warning btn-block" onclick="return confirm('Make {{ user_detail.email }} an admin?')">
+                                <i class="bi bi-shield-check"></i> Make Admin
+                            </button>
+                        </form>
+                    </div>
+                    {% elif user_detail.id != request.user.id %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="remove_admin">
+                            <button type="submit" class="btn btn-outline-warning btn-block" onclick="return confirm('Remove admin privileges from {{ user_detail.email }}?')">
+                                <i class="bi bi-shield-x"></i> Remove Admin
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    
+                    {% if user_detail.is_active and user_detail.id != request.user.id %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="deactivate">
+                            <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Deactivate {{ user_detail.email }}?')">
+                                <i class="bi bi-person-x"></i> Deactivate
+                            </button>
+                        </form>
+                    </div>
+                    {% elif not user_detail.is_active %}
+                    <div class="col-md-6 mb-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="activate">
+                            <button type="submit" class="btn btn-success btn-block" onclick="return confirm('Activate {{ user_detail.email }}?')">
+                                <i class="bi bi-person-check"></i> Activate
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-6 mb-2">
+                        <a href="{% url 'admin:accounts_user_change' user_detail.id %}" class="btn btn-outline-primary btn-block">
+                            <i class="bi bi-pencil"></i> Edit in Django Admin
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-6 mb-2">
+                        <a href="{% url 'web:admin_users' %}" class="btn btn-outline-secondary btn-block">
+                            <i class="bi bi-arrow-left"></i> Back to Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phone Verification History -->
+            {% if phone_verifications %}
+            <div class="admin-card">
+                <h6><i class="bi bi-phone"></i> Phone Verification History</h6>
+                {% for verification in phone_verifications %}
+                <div class="activity-item">
+                    <strong>{{ verification.phone_number }}</strong>
+                    {% if verification.is_verified %}
+                        <span class="status-badge badge-success">Verified</span>
+                    {% else %}
+                        <span class="status-badge badge-warning">Pending</span>
+                    {% endif %}
+                    <br><small class="text-muted">
+                        {{ verification.created_at|date:"M d, Y H:i" }} | 
+                        Attempts: {{ verification.attempts }}
+                        {% if verification.expires_at %}
+                            | Expires: {{ verification.expires_at|date:"M d, Y H:i" }}
+                        {% endif %}
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- User's Wake-up Calls -->
+    <div class="admin-card">
+        <h5><i class="bi bi-alarm"></i> Wake-up Calls ({{ wakeup_calls.count }})</h5>
+        {% for call in wakeup_calls %}
+        <div class="activity-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ call.name }}</strong>
+                    <span class="status-badge badge-{% if call.status == 'active' %}success{% elif call.status == 'paused' %}warning{% else %}secondary{% endif %}">
+                        {{ call.status|title }}
+                    </span>
+                    {% if call.is_demo %}
+                        <span class="status-badge badge-info">Demo</span>
+                    {% endif %}
+                    <br><small class="text-muted">
+                        {{ call.contact_method|title }} at {{ call.scheduled_time }} | 
+                        {{ call.frequency|title }} | 
+                        Created: {{ call.created_at|date:"M d, Y" }}
+                        {% if call.include_weather %}
+                            | Weather: {{ call.weather_zip_code|default:"User ZIP" }}
+                        {% endif %}
+                    </small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <small class="text-muted">
+                            {{ call.execution_count }} executions<br>
+                            {{ call.successful_count }} successful
+                        </small>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="{% url 'web:wakeup_call_detail' call.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        {% if call.status == 'active' %}
+                        <button class="btn btn-outline-warning btn-sm" onclick="adminUpdateCallStatus({{ call.id }}, 'paused')" title="Pause Call">
+                            <i class="bi bi-pause"></i>
+                        </button>
+                        {% elif call.status == 'paused' %}
+                        <button class="btn btn-outline-success btn-sm" onclick="adminUpdateCallStatus({{ call.id }}, 'active')" title="Resume Call">
+                            <i class="bi bi-play"></i>
+                        </button>
+                        {% endif %}
+                        <button class="btn btn-outline-info btn-sm" onclick="adminTestCall({{ call.id }})" title="Test Call Now">
+                            <i class="bi bi-telephone"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="adminUpdateCallStatus({{ call.id }}, 'cancelled')" title="Delete Call">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-4">
+            <p class="text-muted">No wake-up calls created yet.</p>
+            <button class="btn btn-primary btn-sm" onclick="showCreateCallModal()">
+                <i class="bi bi-plus-circle"></i> Create Call for User
+            </button>
+        </div>
+        {% endfor %}
+        
+        {% if wakeup_calls %}
+        <div class="mt-3 text-center">
+            <button class="btn btn-success btn-sm" onclick="showCreateCallModal()">
+                <i class="bi bi-plus-circle"></i> Create New Call for {{ user_detail.first_name|default:user_detail.email }}
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <!-- Recent Executions -->
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h6><i class="bi bi-play-circle"></i> Recent Executions</h6>
+                {% for execution in recent_executions %}
+                <div class="activity-item">
+                    <strong>{{ execution.wakeup_call.name }}</strong>
+                    <span class="status-badge badge-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}danger{% elif execution.status == 'pending' %}warning{% else %}info{% endif %}">
+                        {{ execution.status|title }}
+                    </span>
+                    <br><small class="text-muted">
+                        {% if execution.executed_at %}
+                            {{ execution.executed_at|date:"M d, Y H:i" }}
+                        {% else %}
+                            Scheduled: {{ execution.scheduled_for|date:"M d, Y H:i" }}
+                        {% endif %}
+                        {% if execution.twilio_sid %}
+                            | SID: {{ execution.twilio_sid }}
+                        {% endif %}
+                    </small>
+                    {% if execution.error_message %}
+                        <br><small class="text-danger">{{ execution.error_message }}</small>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">No executions yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Notifications -->
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h6><i class="bi bi-bell"></i> Recent Notifications</h6>
+                {% for notification in recent_notifications %}
+                <div class="activity-item">
+                    <strong>{{ notification.notification_type|title }}</strong> to {{ notification.recipient_phone }}
+                    <span class="status-badge badge-{% if notification.status == 'sent' or notification.status == 'delivered' %}success{% elif notification.status == 'failed' %}danger{% else %}info{% endif %}">
+                        {{ notification.status|title }}
+                    </span>
+                    {% if notification.is_demo %}
+                        <span class="status-badge badge-info">Demo</span>
+                    {% endif %}
+                    <br><small class="text-muted">
+                        {{ notification.sent_at|date:"M d, Y H:i" }}
+                        {% if notification.twilio_sid %}
+                            | SID: {{ notification.twilio_sid }}
+                        {% endif %}
+                    </small>
+                    {% if notification.twilio_error_message %}
+                        <br><small class="text-danger">{{ notification.twilio_error_message }}</small>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">No notifications sent yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Call Modal -->
+<div class="modal fade" id="createCallModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Wake-up Call for {{ user_detail.first_name|default:user_detail.email }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCallForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user_detail.id }}">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Call Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Contact Method <span class="text-danger">*</span></label>
+                                <select class="form-select" name="contact_method" required>
+                                    <option value="call">Voice Call</option>
+                                    <option value="sms">SMS Message</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Scheduled Time <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" name="scheduled_time" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Frequency <span class="text-danger">*</span></label>
+                                <select class="form-select" name="frequency" required>
+                                    <option value="once">Once</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekdays">Weekdays</option>
+                                    <option value="weekends">Weekends</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Custom Message</label>
+                        <textarea class="form-control" name="custom_message" rows="2" placeholder="Optional custom message"></textarea>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="include_weather" id="includeWeather">
+                        <label class="form-check-label" for="includeWeather">
+                            Include weather information
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createCallForUser()">Create Call</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Admin functions for managing user calls
+function adminUpdateCallStatus(callId, status) {
+    const statusMessages = {
+        'active': 'resume this wake-up call',
+        'paused': 'pause this wake-up call',
+        'cancelled': 'permanently delete this wake-up call'
+    };
+    
+    if (confirm(`Are you sure you want to ${statusMessages[status]}?`)) {
+        fetch(`/wakeup-calls/${callId}/update-status/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ status: status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`✅ ${data.message}`);
+                location.reload();
+            } else {
+                alert(`❌ Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the call status.');
+        });
+    }
+}
+
+function adminTestCall(callId) {
+    if (confirm('This will send a test wake-up call immediately. Continue?')) {
+        fetch(`/api/wakeup-calls/${callId}/test-now/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(`✅ ${data.message}`);
+            } else {
+                alert(`❌ Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while testing the call.');
+        });
+    }
+}
+
+function showCreateCallModal() {
+    const modal = new bootstrap.Modal(document.getElementById('createCallModal'));
+    modal.show();
+}
+
+function createCallForUser() {
+    const form = document.getElementById('createCallForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key === 'include_weather') {
+            data[key] = document.querySelector('input[name="include_weather"]').checked;
+        } else {
+            data[key] = value;
+        }
+    });
+    
+    fetch('/admin-users/create-call/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✅ ${data.message}`);
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createCallModal'));
+            modal.hide();
+            location.reload();
+        } else {
+            alert(`❌ Error: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while creating the call.');
+    });
+}
+</script>
+{% endblock %}

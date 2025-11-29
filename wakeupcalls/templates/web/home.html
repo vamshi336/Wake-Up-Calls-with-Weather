@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Welcome - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <div class="hero-section py-5">
+            <h1 class="display-4 fw-bold text-primary mb-4">
+                <i class="bi bi-alarm"></i> Vamshi Wake-up Calls
+            </h1>
+            <p class="lead mb-4">
+                Never oversleep again! Get personalized wake-up calls with weather updates 
+                delivered right to your phone via call or SMS.
+            </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{% url 'web:register' %}" class="btn btn-primary btn-lg me-md-2">
+                    <i class="bi bi-person-plus"></i> Get Started
+                </a>
+                <a href="{% url 'web:login' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-telephone display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Voice & SMS Calls</h5>
+                <p class="card-text">
+                    Choose between personalized voice calls or text messages. 
+                    Interactive voice calls let you snooze, reschedule, or cancel with simple commands.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-cloud-sun display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Weather Updates</h5>
+                <p class="card-text">
+                    Start your day informed! Get current weather conditions and temperature 
+                    for your location included in every wake-up call.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-calendar-check display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Flexible Scheduling</h5>
+                <p class="card-text">
+                    Set up daily, weekly, weekday-only, or custom schedules. 
+                    Perfect for work days, gym sessions, or special events.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h3 class="card-title">How It Works</h3>
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="step">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                                1
+                            </div>
+                            <h6>Sign Up</h6>
+                            <p class="small">Create your account and verify your phone number</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                                2
+                            </div>
+                            <h6>Schedule</h6>
+                            <p class="small">Set your wake-up times and preferences</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                                3
+                            </div>
+                            <h6>Relax</h6>
+                            <p class="small">Sleep peacefully knowing you'll be woken up</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="step">
+                            <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                                4
+                            </div>
+                            <h6>Wake Up</h6>
+                            <p class="small">Receive your personalized wake-up call with weather</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <h3>Ready to Start?</h3>
+        <p class="lead">Join thousands of users who never oversleep anymore!</p>
+        <a href="{% url 'web:register' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Create Your Account
+        </a>
+    </div>
+</div>
+{% endblock %}

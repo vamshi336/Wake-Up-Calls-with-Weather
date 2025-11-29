@@ -1,0 +1,424 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Profile - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-person"></i> Profile Settings</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" 
+                                       value="{{ user.first_name }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" 
+                                       value="{{ user.last_name }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled>
+                        <div class="form-text">Email cannot be changed. Contact support if needed.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                   value="{{ user.phone_number }}" placeholder="+1234567890">
+                            {% if user.phone_verified %}
+                                <span class="input-group-text text-success">
+                                    <i class="bi bi-check-circle-fill"></i> Verified
+                                </span>
+                            {% else %}
+                                <a href="{% url 'web:verify_phone' %}" class="input-group-text text-warning text-decoration-none">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Verify
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% if not user.phone_verified %}
+                            <div class="form-text text-warning">
+                                Phone number must be verified to receive wake-up calls.
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="zip_code" class="form-label">ZIP Code</label>
+                        <input type="text" class="form-control" id="zip_code" name="zip_code" 
+                               value="{{ user.zip_code }}" placeholder="12345">
+                        <div class="form-text">Used for weather updates in your wake-up calls.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="timezone" class="form-label">Timezone</label>
+                        <select class="form-select" id="timezone" name="timezone">
+                            <optgroup label="🇮🇳 India">
+                                <option value="Asia/Kolkata" {% if user.timezone == 'Asia/Kolkata' %}selected{% endif %}>India Standard Time (IST) - Mumbai, Delhi, Bangalore</option>
+                            </optgroup>
+                            <optgroup label="🇺🇸 United States">
+                                <option value="America/New_York" {% if user.timezone == 'America/New_York' %}selected{% endif %}>Eastern Time (ET) - New York, Miami</option>
+                                <option value="America/Chicago" {% if user.timezone == 'America/Chicago' %}selected{% endif %}>Central Time (CT) - Chicago, Dallas</option>
+                                <option value="America/Denver" {% if user.timezone == 'America/Denver' %}selected{% endif %}>Mountain Time (MT) - Denver, Phoenix</option>
+                                <option value="America/Los_Angeles" {% if user.timezone == 'America/Los_Angeles' %}selected{% endif %}>Pacific Time (PT) - Los Angeles, Seattle</option>
+                                <option value="America/Phoenix" {% if user.timezone == 'America/Phoenix' %}selected{% endif %}>Arizona Time (MST) - Phoenix</option>
+                                <option value="America/Anchorage" {% if user.timezone == 'America/Anchorage' %}selected{% endif %}>Alaska Time (AKST) - Anchorage</option>
+                                <option value="Pacific/Honolulu" {% if user.timezone == 'Pacific/Honolulu' %}selected{% endif %}>Hawaii Time (HST) - Honolulu</option>
+                            </optgroup>
+                            <optgroup label="🌍 Other Common">
+                                <option value="UTC" {% if user.timezone == 'UTC' %}selected{% endif %}>UTC (Coordinated Universal Time)</option>
+                                <option value="Europe/London" {% if user.timezone == 'Europe/London' %}selected{% endif %}>London (GMT/BST)</option>
+                                <option value="Europe/Paris" {% if user.timezone == 'Europe/Paris' %}selected{% endif %}>Paris (CET/CEST)</option>
+                                <option value="Asia/Dubai" {% if user.timezone == 'Asia/Dubai' %}selected{% endif %}>Dubai (GST)</option>
+                                <option value="Asia/Singapore" {% if user.timezone == 'Asia/Singapore' %}selected{% endif %}>Singapore (SGT)</option>
+                                <option value="Asia/Tokyo" {% if user.timezone == 'Asia/Tokyo' %}selected{% endif %}>Tokyo (JST)</option>
+                                <option value="Australia/Sydney" {% if user.timezone == 'Australia/Sydney' %}selected{% endif %}>Sydney (AEST/AEDT)</option>
+                            </optgroup>
+                        </select>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle"></i> Your timezone is used for scheduling wake-up calls at the correct local time.
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Update Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Account Info -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-info-circle"></i> Account Information</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Member since:</strong> {{ user.created_at|date:"M j, Y" }}</p>
+                <p><strong>Role:</strong> 
+                    <span class="badge bg-{% if user.is_admin %}danger{% else %}primary{% endif %}">
+                        {{ user.get_role_display }}
+                    </span>
+                </p>
+                <p><strong>Phone Status:</strong> 
+                    {% if user.phone_verified %}
+                        <span class="badge bg-success">Verified</span>
+                    {% else %}
+                        <span class="badge bg-warning">Not Verified</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if not user.phone_verified %}
+                    <a href="{% url 'web:verify_phone' %}" class="btn btn-outline-warning btn-sm">
+                        <i class="bi bi-shield-check"></i> Verify Phone
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> New Wake-up Call
+                    </a>
+                    <a href="{% url 'web:wakeup_calls' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-alarm"></i> My Wake-up Calls
+                    </a>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="openPasswordModal(event);">
+                        <i class="bi bi-key"></i> Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-key"></i> Change Password</h5>
+                <button type="button" class="btn-close" onclick="closePasswordModal(event); return false;" aria-label="Close" style="pointer-events: auto; z-index: 1058;"></button>
+            </div>
+            <form method="post" action="{% url 'web:change_password' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="old_password" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="old_password" name="old_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password_confirm" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="new_password_confirm" name="new_password_confirm" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal(event); return false;" style="pointer-events: auto; z-index: 1058;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Password modal functions
+function openPasswordModal(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    try {
+        const modalElement = document.getElementById('changePasswordModal');
+        if (!modalElement) {
+            alert('Password modal not found. Please refresh the page.');
+            return false;
+        }
+        
+        // Simple direct approach - always works
+        modalElement.style.display = 'flex';
+        modalElement.style.alignItems = 'center';
+        modalElement.style.justifyContent = 'center';
+        modalElement.style.zIndex = '1055';
+        modalElement.style.pointerEvents = 'auto';
+        modalElement.style.opacity = '1';
+        modalElement.classList.add('show');
+        modalElement.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = '0px';
+        
+        // Handle clicks on modal container - close if clicking outside dialog
+        modalElement.onclick = function(e) {
+            if (e.target === modalElement) {
+                closePasswordModal();
+            }
+        };
+        
+        // Add backdrop (only if not exists) - NON-INTERACTIVE
+        let backdrop = document.getElementById('password-modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.id = 'password-modal-backdrop';
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.style.position = 'fixed';
+            backdrop.style.top = '0';
+            backdrop.style.left = '0';
+            backdrop.style.width = '100vw';
+            backdrop.style.height = '100vh';
+            backdrop.style.zIndex = '1050';
+            backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            backdrop.style.pointerEvents = 'none'; // NON-INTERACTIVE - clicks pass through
+            document.body.appendChild(backdrop);
+        }
+        
+        // Ensure modal dialog stops all event propagation
+        const modalDialog = modalElement.querySelector('.modal-dialog');
+        if (modalDialog) {
+            modalDialog.style.pointerEvents = 'auto';
+            modalDialog.style.zIndex = '1056';
+            modalDialog.style.position = 'relative';
+            // Allow all interactive elements to work normally
+            modalDialog.addEventListener('click', function(e) {
+                const target = e.target;
+                const isButton = target.tagName === 'BUTTON' || target.closest('button');
+                const isLink = target.tagName === 'A' || target.closest('a');
+                const isInput = target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA';
+                const isForm = target.tagName === 'FORM' || target.closest('form');
+                
+                // Always allow buttons, links, inputs, and forms to work
+                if (isButton || isLink || isInput || isForm) {
+                    return; // Don't stop propagation - let them work normally
+                }
+                
+                // Only stop propagation for background/clicks on dialog itself
+                if (target === modalDialog) {
+                    e.stopPropagation();
+                }
+            }, false); // Use bubble phase so buttons fire first
+        }
+        
+        // Ensure modal content is solid white and opaque
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.backgroundColor = '#ffffff';
+            modalContent.style.opacity = '1';
+            modalContent.style.pointerEvents = 'auto';
+            modalContent.style.zIndex = '1057';
+        }
+        
+        // Focus on first input
+        const firstInput = modalElement.querySelector('input');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+        
+        // Password confirmation validation
+        const newPassword = document.getElementById('new_password');
+        const confirmPassword = document.getElementById('new_password_confirm');
+        if (confirmPassword) {
+            confirmPassword.addEventListener('input', function() {
+                if (newPassword && newPassword.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity('Passwords do not match');
+                } else {
+                    confirmPassword.setCustomValidity('');
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error opening password modal:', error);
+        alert('Error opening modal. Please refresh the page.');
+    }
+    
+    return false;
+}
+
+function closePasswordModal(event) {
+    try {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        }
+        
+        const modalElement = document.getElementById('changePasswordModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+            modalElement.classList.remove('show');
+            modalElement.setAttribute('aria-hidden', 'true');
+            modalElement.removeAttribute('aria-modal');
+            modalElement.style.opacity = '0';
+            
+            // Clear form
+            const form = modalElement.querySelector('form');
+            if (form) {
+                form.reset();
+            }
+        }
+        
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        
+        const backdrop = document.getElementById('password-modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error closing password modal:', error);
+        // Force close by hiding modal directly
+        const modalElement = document.getElementById('changePasswordModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+        }
+        return false;
+    }
+}
+
+// ESC key support for closing password modal
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const passwordModal = document.getElementById('changePasswordModal');
+        if (passwordModal && passwordModal.style.display === 'flex') {
+            closePasswordModal();
+        }
+    }
+});
+
+// Ensure modal is hidden by default
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordModal = document.getElementById('changePasswordModal');
+    if (passwordModal) {
+        passwordModal.style.display = 'none';
+    }
+    
+    // Add CSS for password modal
+    const style = document.createElement('style');
+    style.textContent = `
+        #changePasswordModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1055;
+        }
+        #changePasswordModal.show {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            opacity: 1 !important;
+        }
+        #changePasswordModal .modal-dialog {
+            position: relative;
+            width: auto;
+            max-width: 500px;
+            margin: 1.75rem auto;
+            pointer-events: auto !important;
+            z-index: 1056;
+        }
+        #changePasswordModal .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: #ffffff !important;
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            outline: 0;
+            opacity: 1 !important;
+            z-index: 1057;
+        }
+        #changePasswordModal button {
+            pointer-events: auto !important;
+            z-index: 1058;
+            position: relative;
+            cursor: pointer;
+        }
+        #changePasswordModal .modal-header,
+        #changePasswordModal .modal-footer {
+            pointer-events: auto !important;
+            z-index: 1057;
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}

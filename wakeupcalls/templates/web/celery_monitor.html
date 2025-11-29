@@ -1,0 +1,260 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Celery Monitor - Vamshi Wake-up Calls{% endblock %}
+
+{% block extra_css %}
+<style>
+    .monitor-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    .worker-status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+    .worker-online {
+        background: #4CAF50;
+        color: white;
+    }
+    .worker-offline {
+        background: #f44336;
+        color: white;
+    }
+    .task-row {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .task-row:last-child {
+        border-bottom: none;
+    }
+    .status-completed {
+        color: #4CAF50;
+        font-weight: bold;
+    }
+    .status-failed {
+        color: #f44336;
+        font-weight: bold;
+    }
+    .status-pending {
+        color: #ff9800;
+        font-weight: bold;
+    }
+    .refresh-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+    .refresh-btn:hover {
+        background: #5a67d8;
+    }
+    pre {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🔧 Celery Monitor</h1>
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+    </div>
+
+    <!-- Task Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.total_calls }}</div>
+                <div class="stat-label">Total Calls</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.active_calls }}</div>
+                <div class="stat-label">Active Calls</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.executions_24h }}</div>
+                <div class="stat-label">Executions (24h)</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.successful_24h }}</div>
+                <div class="stat-label">Successful (24h)</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.failed_24h }}</div>
+                <div class="stat-label">Failed (24h)</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stat-box">
+                <div class="stat-number">{{ task_stats.sms_sent_24h }}</div>
+                <div class="stat-label">SMS Sent (24h)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workers Status -->
+    <div class="monitor-card">
+        <h3>🔧 Celery Workers</h3>
+        {% if worker_info %}
+            {% for worker in worker_info %}
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        {{ worker.name }}
+                        <span class="worker-status worker-online">ONLINE</span>
+                    </h5>
+                    <small>PID: {{ worker.pid }} | Uptime: {{ worker.uptime }}s</small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Task Totals:</h6>
+                            <ul class="list-unstyled">
+                                {% for task_name, count in worker.total_tasks.items %}
+                                <li><strong>{{ task_name }}:</strong> {{ count }}</li>
+                                {% empty %}
+                                <li>No tasks executed yet</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Active Tasks:</h6>
+                            {% if worker.active_tasks %}
+                                <ul class="list-unstyled">
+                                    {% for task in worker.active_tasks %}
+                                    <li>{{ task.name }} ({{ task.id }})</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No active tasks</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <h6>Pool Info:</h6>
+                    <p><strong>Implementation:</strong> {{ worker.pool_implementation }}</p>
+                    <p><strong>Max Concurrency:</strong> {{ worker.pool_max_concurrency }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">
+                <strong>No workers found!</strong> Make sure Celery workers are running.
+                <br><small>Start workers with: <code>python -m celery -A wakeupcalls_project worker --loglevel=info --pool=solo</code></small>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Executions -->
+    <div class="monitor-card">
+        <h3>📋 Recent Task Executions</h3>
+        {% if recent_executions %}
+            {% for execution in recent_executions %}
+            <div class="task-row">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ execution.wakeup_call.name }}</strong>
+                        <span class="badge badge-secondary">{{ execution.wakeup_call.contact_method }}</span>
+                        <br>
+                        <small class="text-muted">
+                            User: {{ execution.wakeup_call.user.email }} | 
+                            Phone: {{ execution.wakeup_call.phone_number }}
+                        </small>
+                    </div>
+                    <div class="text-right">
+                        <div class="status-{{ execution.status }}">{{ execution.status|upper }}</div>
+                        <small class="text-muted">{{ execution.created_at|date:"M d, H:i" }}</small>
+                        {% if execution.twilio_sid %}
+                            <br><small>SID: {{ execution.twilio_sid }}</small>
+                        {% endif %}
+                        {% if execution.error_message %}
+                            <br><small class="text-danger">{{ execution.error_message|truncatechars:50 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No recent executions found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Status Breakdown -->
+    <div class="monitor-card">
+        <h3>📊 Execution Status (Last 24h)</h3>
+        {% if status_breakdown %}
+            <div class="row">
+                {% for status in status_breakdown %}
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div class="stat-number">{{ status.count }}</div>
+                        <div class="stat-label">{{ status.status|upper }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">No executions in the last 24 hours.</p>
+        {% endif %}
+    </div>
+
+    <!-- Raw Stats (Collapsible) -->
+    <div class="monitor-card">
+        <h3>
+            <button class="btn btn-link p-0" type="button" data-toggle="collapse" data-target="#rawStats">
+                🔍 Raw Worker Stats (Click to expand)
+            </button>
+        </h3>
+        <div class="collapse" id="rawStats">
+            <pre>{{ stats_json }}</pre>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh every 30 seconds
+setTimeout(function() {
+    location.reload();
+}, 30000);
+</script>
+{% endblock %}

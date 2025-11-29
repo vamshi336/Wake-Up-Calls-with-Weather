@@ -1,0 +1,276 @@
+{% extends "base/base.html" %}
+
+{% block title %}Bulk Phone Verification - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .verification-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 1px solid #e3e6f0;
+    }
+    .result-item {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 8px;
+        border-left: 4px solid #ddd;
+    }
+    .result-success {
+        background: #d4edda;
+        border-left-color: #28a745;
+        color: #155724;
+    }
+    .result-failed {
+        background: #f8d7da;
+        border-left-color: #dc3545;
+        color: #721c24;
+    }
+    .result-error {
+        background: #fff3cd;
+        border-left-color: #ffc107;
+        color: #856404;
+    }
+    .phone-input {
+        font-family: monospace;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-shield-check"></i> Bulk Phone Verification</h1>
+        <a href="{% url 'web:admin_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Instructions -->
+    <div class="alert alert-info">
+        <h6><i class="bi bi-info-circle"></i> How to Use</h6>
+        <ul class="mb-0">
+            <li><strong>Development Bypass:</strong> Instantly marks numbers as verified in our system (for testing)</li>
+            <li><strong>Twilio Verification:</strong> Attempts real Twilio verification (may fail on trial accounts)</li>
+            <li><strong>Format:</strong> Include country code (e.g., +1234567890, +919876543210)</li>
+            <li><strong>Multiple Numbers:</strong> Enter one per line</li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <!-- Input Form -->
+        <div class="col-md-6">
+            <div class="verification-card">
+                <h5><i class="bi bi-telephone-plus"></i> Add Phone Numbers</h5>
+                
+                <form id="bulkVerificationForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="phoneNumbers" class="form-label">Phone Numbers <span class="text-danger">*</span></label>
+                        <textarea class="form-control phone-input" id="phoneNumbers" name="phone_numbers" rows="10" 
+                                  placeholder="+1234567890&#10;+919876543210&#10;+447123456789&#10;+33123456789" required></textarea>
+                        <div class="form-text">Enter one phone number per line with country code</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="verificationMethod" class="form-label">Verification Method</label>
+                        <select class="form-select" id="verificationMethod" name="method">
+                            <option value="bypass">Development Bypass (Recommended for Testing)</option>
+                            <option value="twilio">Twilio Verification (May fail on trial accounts)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" id="verifyButton">
+                            <i class="bi bi-shield-check"></i> Verify All Numbers
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quick Examples -->
+            <div class="verification-card">
+                <h6><i class="bi bi-lightbulb"></i> Quick Examples</h6>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info btn-sm" onclick="addExampleNumbers('us')">
+                        <i class="bi bi-flag-usa"></i> Add US Numbers
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="addExampleNumbers('india')">
+                        <i class="bi bi-flag"></i> Add India Numbers
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="clearNumbers()">
+                        <i class="bi bi-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="col-md-6">
+            <div class="verification-card">
+                <h5><i class="bi bi-list-check"></i> Verification Results</h5>
+                <div id="resultsContainer">
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-clock-history" style="font-size: 2em;"></i>
+                        <p class="mt-2">Results will appear here after verification</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Example phone numbers
+const examples = {
+    us: [
+        '+12125551234',
+        '+13105551234', 
+        '+14155551234',
+        '+17025551234'
+    ],
+    india: [
+        '+919876543210',
+        '+919123456789',
+        '+918765432109',
+        '+919988776655'
+    ]
+};
+
+function addExampleNumbers(region) {
+    const textarea = document.getElementById('phoneNumbers');
+    const currentValue = textarea.value.trim();
+    const newNumbers = examples[region].join('\n');
+    
+    if (currentValue) {
+        textarea.value = currentValue + '\n' + newNumbers;
+    } else {
+        textarea.value = newNumbers;
+    }
+}
+
+function clearNumbers() {
+    document.getElementById('phoneNumbers').value = '';
+    document.getElementById('resultsContainer').innerHTML = `
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-clock-history" style="font-size: 2em;"></i>
+            <p class="mt-2">Results will appear here after verification</p>
+        </div>
+    `;
+}
+
+// Handle form submission
+document.getElementById('bulkVerificationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const phoneNumbers = document.getElementById('phoneNumbers').value
+        .split('\n')
+        .map(num => num.trim())
+        .filter(num => num.length > 0);
+    
+    const method = document.getElementById('verificationMethod').value;
+    const button = document.getElementById('verifyButton');
+    
+    if (phoneNumbers.length === 0) {
+        alert('Please enter at least one phone number');
+        return;
+    }
+    
+    // Show loading state
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Processing...';
+    button.disabled = true;
+    
+    // Clear previous results
+    document.getElementById('resultsContainer').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Processing...</span>
+            </div>
+            <p class="mt-2">Verifying ${phoneNumbers.length} phone numbers...</p>
+        </div>
+    `;
+    
+    // Send request
+    fetch('/admin-bulk-verify/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            phone_numbers: phoneNumbers,
+            method: method
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayResults(data);
+        button.innerHTML = originalText;
+        button.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('resultsContainer').innerHTML = `
+            <div class="result-error">
+                <strong>Error:</strong> Failed to process verification request
+            </div>
+        `;
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+});
+
+function displayResults(data) {
+    const container = document.getElementById('resultsContainer');
+    
+    if (!data.success) {
+        container.innerHTML = `
+            <div class="result-error">
+                <strong>Error:</strong> ${data.error}
+            </div>
+        `;
+        return;
+    }
+    
+    let html = `
+        <div class="mb-3">
+            <h6>Processed ${data.total_processed} phone numbers:</h6>
+        </div>
+    `;
+    
+    data.results.forEach(result => {
+        const statusClass = result.status === 'success' ? 'result-success' : 
+                           result.status === 'failed' ? 'result-failed' : 'result-error';
+        
+        const icon = result.status === 'success' ? 'bi-check-circle' : 
+                    result.status === 'failed' ? 'bi-x-circle' : 'bi-exclamation-triangle';
+        
+        html += `
+            <div class="result-item ${statusClass}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi ${icon}"></i>
+                        <strong>${result.phone}</strong>
+                        <small class="text-muted">(${result.method})</small>
+                    </div>
+                    <span class="badge bg-${result.status === 'success' ? 'success' : 'danger'}">
+                        ${result.status.toUpperCase()}
+                    </span>
+                </div>
+                <div class="mt-1">
+                    <small>${result.message}</small>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+</script>
+{% endblock %}

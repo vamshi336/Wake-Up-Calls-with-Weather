@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Login - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="bi bi-box-arrow-in-right"></i> Sign In</h4>
+                <p class="text-muted mb-0">Welcome back to Vamshi Wake-up Calls</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">
+                    Don't have an account? 
+                    <a href="{% url 'web:register' %}" class="text-decoration-none">Sign up here</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Getting Started Info -->
+        <div class="card mt-3 bg-light">
+            <div class="card-body text-center">
+                <h6 class="card-title"><i class="bi bi-info-circle"></i> New to Vamshi?</h6>
+                <p class="card-text small">
+                    Create your account to start receiving personalized wake-up calls with weather updates!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

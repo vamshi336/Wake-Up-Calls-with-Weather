@@ -1,0 +1,493 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load timezone_tags %}
+
+{% block title %}Dashboard - Vamshi Wake-up Calls{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Professional Light Theme Dashboard */
+    body {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f4f8 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .dashboard-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 20px rgba(79, 115, 223, 0.08);
+        border: 1px solid rgba(79, 115, 223, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .dashboard-card:hover {
+        box-shadow: 0 4px 30px rgba(79, 115, 223, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .welcome-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 32px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .welcome-header h1 {
+        font-weight: 600;
+        margin-bottom: 12px;
+        font-size: 2.2rem;
+    }
+    
+    .welcome-header .lead {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+    
+    .stat-card {
+        background: #ffffff;
+        color: #2c3e50;
+        padding: 24px;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 20px;
+        border: 2px solid #e8f2ff;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4e73df, #36b9cc);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(78, 115, 223, 0.15);
+        border-color: #4e73df;
+    }
+    
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #4e73df;
+        text-shadow: 0 2px 4px rgba(78, 115, 223, 0.1);
+    }
+    
+    .stat-label {
+        font-size: 0.95em;
+        color: #6c757d;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .call-item {
+        background: #ffffff;
+        padding: 24px;
+        border: 1px solid #e8f2ff;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .call-item:hover {
+        box-shadow: 0 6px 25px rgba(79, 115, 223, 0.1);
+        transform: translateY(-2px);
+        border-color: #4e73df;
+    }
+    
+    .status-active { 
+        border-left: 5px solid #28a745;
+        background: linear-gradient(90deg, rgba(40, 167, 69, 0.05) 0%, transparent 100%);
+    }
+    .status-paused { 
+        border-left: 5px solid #ffc107;
+        background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%);
+    }
+    .status-cancelled { 
+        border-left: 5px solid #dc3545;
+        background: linear-gradient(90deg, rgba(220, 53, 69, 0.05) 0%, transparent 100%);
+    }
+    
+    .quick-action-btn {
+        margin: 8px;
+        min-width: 160px;
+        border-radius: 30px;
+        padding: 12px 24px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+    }
+    
+    .btn-info {
+        background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+    }
+    
+    .execution-item {
+        padding: 16px;
+        border-bottom: 1px solid #f0f4f8;
+        font-size: 0.9em;
+        transition: all 0.2s ease;
+    }
+    
+    .execution-item:hover {
+        background: #f8f9ff;
+        border-radius: 8px;
+    }
+    
+    .execution-item:last-child { border-bottom: none; }
+    
+    .status-success { 
+        color: #28a745; 
+        font-weight: 600;
+        background: rgba(40, 167, 69, 0.1);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+    .status-failed { 
+        color: #dc3545; 
+        font-weight: 600;
+        background: rgba(220, 53, 69, 0.1);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+    .status-pending { 
+        color: #ffc107; 
+        font-weight: 600;
+        background: rgba(255, 193, 7, 0.1);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px;
+        color: #6c757d;
+        background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+        border-radius: 16px;
+        border: 2px dashed #d1ecf1;
+    }
+    
+    .empty-state i {
+        font-size: 4em;
+        margin-bottom: 24px;
+        color: #4e73df;
+        opacity: 0.6;
+    }
+    
+    .badge {
+        font-size: 0.75em;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .badge-success {
+        background: linear-gradient(135deg, #1cc88a, #13855c);
+    }
+    
+    .badge-warning {
+        background: linear-gradient(135deg, #f6c23e, #dda20a);
+    }
+    
+    .badge-info {
+        background: linear-gradient(135deg, #36b9cc, #258391);
+    }
+    
+    .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 1px solid #f6c23e;
+        border-radius: 12px;
+        color: #856404;
+    }
+    
+    h4, h5, h6 {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .text-muted {
+        color: #6c757d !important;
+    }
+    
+    /* Card Headers with Icons */
+    .dashboard-card h4 i,
+    .dashboard-card h5 i {
+        color: #4e73df;
+        margin-right: 8px;
+    }
+    
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+        .welcome-header {
+            padding: 24px;
+        }
+        .welcome-header h1 {
+            font-size: 1.8rem;
+        }
+        .stat-number {
+            font-size: 2em;
+        }
+        .quick-action-btn {
+            min-width: 120px;
+            margin: 4px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <h1>Welcome back, {{ user.first_name|default:user.username }}!</h1>
+        <p class="mb-0 lead">Your personal wake-up call assistant powered by Vamshi</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.total_calls }}</div>
+                <div class="stat-label">Total Wake-up Calls</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.active_calls }}</div>
+                <div class="stat-label">Active Calls</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.total_executions }}</div>
+                <div class="stat-label">Total Executions</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{% if user.phone_verified %}✓{% else %}✗{% endif %}</div>
+                <div class="stat-label">Phone Status</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-card">
+        <h4><i class="bi bi-lightning-fill"></i> Quick Actions</h4>
+        <div class="text-center mt-4">
+            <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-primary btn-lg quick-action-btn">
+                <i class="bi bi-plus-circle"></i> New Wake-up Call
+            </a>
+            {% if not user.phone_verified %}
+            <a href="{% url 'web:verify_phone' %}" class="btn btn-warning btn-lg quick-action-btn">
+                <i class="bi bi-shield-check"></i> Verify Phone
+            </a>
+            {% endif %}
+            <a href="{% url 'web:profile' %}" class="btn btn-info btn-lg quick-action-btn">
+                <i class="bi bi-person-gear"></i> Account Settings
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Your Wake-up Calls -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="bi bi-alarm"></i> Your Wake-up Calls</h4>
+                    <a href="{% url 'web:wakeup_calls' %}" class="btn btn-outline-primary btn-sm">
+                        View All
+                    </a>
+                </div>
+                
+                {% if user_calls %}
+                    {% for call in user_calls %}
+                    <div class="call-item status-{{ call.status }}">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="mb-2">
+                                    {{ call.name }}
+                                    <span class="badge badge-{% if call.status == 'active' %}success{% elif call.status == 'paused' %}warning{% else %}secondary{% endif %} ml-2">
+                                        {{ call.status|title }}
+                                    </span>
+                                    {% if call.is_demo %}
+                                        <span class="badge badge-info ml-1">Demo</span>
+                                    {% endif %}
+                                </h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-clock"></i> {{ call.scheduled_time }} | 
+                                    <i class="bi bi-repeat"></i> {{ call.frequency|title }} | 
+                                    <i class="bi bi-{% if call.contact_method == 'call' %}telephone{% else %}chat-text{% endif %}"></i> {{ call.contact_method|title }}
+                                    {% if call.include_weather %}
+                                        | <i class="bi bi-cloud-sun"></i> Weather included
+                                    {% endif %}
+                                </p>
+                                {% if call.custom_message %}
+                                <p class="small text-info mb-0">
+                                    <i class="bi bi-chat-quote"></i> "{{ call.custom_message }}"
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <button class="btn btn-success btn-sm" onclick="testCall({{ call.id }})">
+                                    <i class="bi bi-play-circle"></i> Test Now
+                                </button>
+                                <a href="{% url 'web:wakeup_call_detail' call.id %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-gear"></i> Manage
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-alarm"></i>
+                        <h5>No Wake-up Calls Yet</h5>
+                        <p>Create your first wake-up call to get started!</p>
+                        <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Create Your First Call
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <h5><i class="bi bi-activity"></i> Recent Activity</h5>
+                
+                {% if user_executions %}
+                    {% for execution in user_executions %}
+                    <div class="execution-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ execution.wakeup_call.name }}</strong>
+                                <br><small class="text-muted">
+                                    {% if execution.executed_at %}
+                                        {{ execution.executed_at|date:"M d, H:i" }}
+                                    {% else %}
+                                        Scheduled: {{ execution.scheduled_for|date:"M d, H:i" }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <span class="status-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}failed{% else %}pending{% endif %}">
+                                {{ execution.status|title }}
+                            </span>
+                        </div>
+                        {% if execution.error_message %}
+                            <small class="text-danger">{{ execution.error_message|truncatechars:50 }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-clock-history text-muted" style="font-size: 2em;"></i>
+                        <p class="text-muted mt-2">No activity yet</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Phone Verification Status -->
+            {% if not user.phone_verified %}
+            <div class="dashboard-card">
+                <div class="alert alert-warning">
+                    <h6><i class="bi bi-exclamation-triangle"></i> Phone Verification Required</h6>
+                    <p class="mb-2">Please verify your phone number to start receiving wake-up calls.</p>
+                    <a href="{% url 'web:verify_phone' %}" class="btn btn-warning btn-sm">
+                        <i class="bi bi-shield-check"></i> Verify Now
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Help & Support -->
+            <div class="dashboard-card">
+                <h6><i class="bi bi-question-circle"></i> Need Help?</h6>
+                <ul class="list-unstyled small">
+                    <li><i class="bi bi-check-circle text-success"></i> Voice calls support DTMF commands</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Press 1 to snooze for 10 minutes</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Press 2 to cancel future calls</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Say "reschedule" to change timing</li>
+                </ul>
+                {% if user.is_staff %}
+                <div class="mt-3">
+                    <a href="{% url 'web:main_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-tools"></i> Requirements Dashboard
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function testCall(callId) {
+    if (confirm('This will test the wake-up call immediately. Continue?')) {
+        fetch(`/dashboard/test-call/${callId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ ' + data.message);
+                location.reload();
+            } else {
+                alert('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while testing the call.');
+        });
+    }
+}
+</script>
+{% endblock %}

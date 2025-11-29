@@ -1,0 +1,260 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Register - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="bi bi-person-plus"></i> Create Account</h4>
+                <p class="text-muted mb-0">Join Vamshi Wake-up Calls today</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="first_name" name="first_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="last_name" name="last_name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Username field hidden - we'll use email as username -->
+                    <input type="hidden" id="username" name="username" value="">
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-text">We'll use this email for account notifications.</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password_confirm" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890">
+                        </div>
+                        <div class="form-text">Include country code (e.g., +1 for US). Required for wake-up calls.</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="zip_code" class="form-label">ZIP Code</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                    <input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="12345">
+                                </div>
+                                <div class="form-text">Used for weather updates.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="timezone" class="form-label">Timezone <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                                    <select class="form-select" id="timezone" name="timezone" required>
+                                        <option value="">Select your timezone</option>
+                                        <optgroup label="🇮🇳 India">
+                                            <option value="Asia/Kolkata">India Standard Time (IST) - All of India</option>
+                                        </optgroup>
+                                        <optgroup label="🇺🇸 United States">
+                                            <option value="America/New_York">Eastern Time (ET) - New York, Miami</option>
+                                            <option value="America/Chicago">Central Time (CT) - Chicago, Dallas</option>
+                                            <option value="America/Denver">Mountain Time (MT) - Denver, Phoenix</option>
+                                            <option value="America/Los_Angeles">Pacific Time (PT) - Los Angeles, Seattle</option>
+                                        </optgroup>
+                                        <optgroup label="🌍 Other Common">
+                                            <option value="UTC">UTC (Coordinated Universal Time)</option>
+                                            <option value="Europe/London">London (GMT/BST)</option>
+                                            <option value="Europe/Paris">Paris (CET/CEST)</option>
+                                            <option value="Asia/Dubai">Dubai (GST)</option>
+                                            <option value="Asia/Singapore">Singapore (SGT)</option>
+                                            <option value="Asia/Tokyo">Tokyo (JST)</option>
+                                            <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div class="form-text">Your local timezone for scheduling.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and 
+                            <a href="#" class="text-decoration-none">Privacy Policy</a> <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" id="registerBtn">
+                            <span class="btn-text">
+                                <i class="bi bi-person-plus"></i> Create Account & Sign In
+                            </span>
+                            <span class="btn-loading d-none">
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                Creating account...
+                            </span>
+                        </button>
+                        <small class="text-muted mt-2 text-center">
+                            <i class="bi bi-info-circle"></i> You'll be automatically signed in after registration
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">
+                    Already have an account? 
+                    <a href="{% url 'web:login' %}" class="text-decoration-none">Sign in here</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Features Preview -->
+        <div class="card mt-3 bg-light">
+            <div class="card-body">
+                <h6 class="card-title text-center"><i class="bi bi-star"></i> What You'll Get</h6>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <i class="bi bi-telephone display-6 text-primary"></i>
+                        <p class="small mt-2">Voice & SMS<br>Wake-up Calls</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-cloud-sun display-6 text-primary"></i>
+                        <p class="small mt-2">Weather<br>Updates</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-calendar-check display-6 text-primary"></i>
+                        <p class="small mt-2">Flexible<br>Scheduling</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Password confirmation validation
+document.getElementById('password_confirm').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (password !== confirmPassword) {
+        this.setCustomValidity('Passwords do not match');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+
+// Set username to email automatically
+document.getElementById('email').addEventListener('input', function() {
+    document.getElementById('username').value = this.value;
+});
+
+// Auto-detect and pre-select user's timezone
+document.addEventListener('DOMContentLoaded', function() {
+    const timezoneSelect = document.getElementById('timezone');
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    // Try to find and select the user's timezone
+    const options = timezoneSelect.options;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === userTimezone) {
+            options[i].selected = true;
+            break;
+        }
+    }
+    
+    // If not found, try to map common timezones
+    if (!timezoneSelect.value) {
+        const timezoneMap = {
+            'Asia/Kolkata': ['Asia/Kolkata', 'Asia/Calcutta', 'IST', 'India/Standard'],
+            'America/New_York': ['America/New_York', 'US/Eastern'],
+            'America/Chicago': ['America/Chicago', 'US/Central'],
+            'America/Denver': ['America/Denver', 'US/Mountain'],
+            'America/Los_Angeles': ['America/Los_Angeles', 'US/Pacific'],
+            'Europe/London': ['Europe/London', 'GB'],
+            'Europe/Paris': ['Europe/Paris'],
+            'Asia/Dubai': ['Asia/Dubai'],
+            'Asia/Singapore': ['Asia/Singapore'],
+            'Asia/Tokyo': ['Asia/Tokyo'],
+            'Australia/Sydney': ['Australia/Sydney']
+        };
+        
+        for (const [selectValue, timezones] of Object.entries(timezoneMap)) {
+            if (timezones.includes(userTimezone)) {
+                timezoneSelect.value = selectValue;
+                break;
+            }
+        }
+    }
+    
+    // Show detected timezone info
+    if (timezoneSelect.value) {
+        const selectedOption = timezoneSelect.options[timezoneSelect.selectedIndex];
+        console.log('Auto-detected timezone:', selectedOption.text);
+    }
+    
+    // Improve form submission experience
+    const form = document.querySelector('form');
+    const registerBtn = document.getElementById('registerBtn');
+    const btnText = registerBtn.querySelector('.btn-text');
+    const btnLoading = registerBtn.querySelector('.btn-loading');
+    
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        registerBtn.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
+        
+        // Show user feedback
+        const submitMessage = document.createElement('div');
+        submitMessage.className = 'alert alert-info mt-3';
+        submitMessage.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating your account and signing you in...';
+        form.appendChild(submitMessage);
+    });
+});
+</script>
+{% endblock %}

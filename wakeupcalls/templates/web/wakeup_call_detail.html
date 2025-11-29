@@ -1,0 +1,985 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ wakeup_call.name }} - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1><i class="bi bi-alarm"></i> {{ wakeup_call.name }}</h1>
+        <span class="badge bg-{% if wakeup_call.status == 'active' %}success{% elif wakeup_call.status == 'paused' %}warning{% else %}secondary{% endif %} fs-6">
+            {{ wakeup_call.get_status_display }}
+        </span>
+    </div>
+    <div class="btn-group" role="group">
+        {% if wakeup_call.status == 'active' %}
+        <button class="btn btn-outline-warning" onclick="pauseCall(event)">
+            <i class="bi bi-pause"></i> Pause
+        </button>
+        {% elif wakeup_call.status == 'paused' %}
+        <button class="btn btn-outline-success" onclick="resumeCall(event)">
+            <i class="bi bi-play"></i> Resume
+        </button>
+        {% endif %}
+        <button class="btn btn-outline-danger" onclick="cancelCall(event)">
+            <i class="bi bi-x-circle"></i> Cancel
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Wake-up Call Details -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Call Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-clock"></i> Schedule</h6>
+                        <p><strong>Time:</strong> {{ wakeup_call.scheduled_time|time:"g:i A" }}</p>
+                        <p><strong>Frequency:</strong> {{ wakeup_call.get_frequency_display }}</p>
+                        
+                        {% if wakeup_call.frequency == 'custom' %}
+                        <p><strong>Days:</strong>
+                            {% if wakeup_call.monday %}Mon{% endif %}
+                            {% if wakeup_call.tuesday %}Tue{% endif %}
+                            {% if wakeup_call.wednesday %}Wed{% endif %}
+                            {% if wakeup_call.thursday %}Thu{% endif %}
+                            {% if wakeup_call.friday %}Fri{% endif %}
+                            {% if wakeup_call.saturday %}Sat{% endif %}
+                            {% if wakeup_call.sunday %}Sun{% endif %}
+                        </p>
+                        {% endif %}
+                        
+                        {% if wakeup_call.next_execution %}
+                        <p id="next-execution-display"><strong>Next Call:</strong> <span id="next-execution-time">{{ wakeup_call.next_execution|date:"M j, Y g:i A" }}</span></p>
+                        {% else %}
+                        <p id="next-execution-display" style="display: none;"><strong>Next Call:</strong> <span id="next-execution-time">Not scheduled</span></p>
+                        {% endif %}
+                        
+                        {% if wakeup_call.last_executed %}
+                        <p><strong>Last Call:</strong> {{ wakeup_call.last_executed|timesince }} ago</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-telephone"></i> Contact</h6>
+                        <p><strong>Method:</strong> 
+                            {% if wakeup_call.contact_method == 'call' %}
+                                <i class="bi bi-telephone text-primary"></i> Voice Call
+                            {% else %}
+                                <i class="bi bi-chat-text text-success"></i> SMS Message
+                            {% endif %}
+                        </p>
+                        <p><strong>Phone:</strong> {{ wakeup_call.phone_number }}</p>
+                        
+                        <h6 class="mt-3"><i class="bi bi-cloud-sun"></i> Weather</h6>
+                        <p><strong>Include Weather:</strong> 
+                            {% if wakeup_call.include_weather %}
+                                <i class="bi bi-check-circle text-success"></i> Yes
+                            {% else %}
+                                <i class="bi bi-x-circle text-muted"></i> No
+                            {% endif %}
+                        </p>
+                        {% if wakeup_call.include_weather %}
+                        <p><strong>ZIP Code:</strong> {{ wakeup_call.get_weather_zip_code|default:"Not set" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if wakeup_call.custom_message %}
+                <div class="mt-3">
+                    <h6><i class="bi bi-chat-quote"></i> Custom Message</h6>
+                    <div class="alert alert-light">
+                        "{{ wakeup_call.custom_message }}"
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if wakeup_call.is_demo %}
+                <div class="alert alert-info mt-3">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Demo Mode:</strong> This wake-up call is in demo mode and won't make actual calls or send SMS messages.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Execution History -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Execution History</h5>
+            </div>
+            <div class="card-body">
+                {% if executions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Method</th>
+                                    <th>Response</th>
+                                    <th>Weather</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for execution in executions %}
+                                <tr>
+                                    <td>
+                                        {% if execution.executed_at %}
+                                            {{ execution.executed_at|date:"M j, Y g:i A" }}
+                                        {% else %}
+                                            {{ execution.scheduled_for|date:"M j, Y g:i A" }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if execution.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif execution.status == 'failed' %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% elif execution.status == 'in_progress' %}
+                                            <span class="badge bg-primary">In Progress</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ execution.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if wakeup_call.contact_method == 'call' %}
+                                            <i class="bi bi-telephone text-primary"></i>
+                                        {% else %}
+                                            <i class="bi bi-chat-text text-success"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if execution.user_response %}
+                                            <small class="text-muted">{{ execution.user_response }}</small>
+                                        {% else %}
+                                            <small class="text-muted">-</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if execution.weather_data %}
+                                            <i class="bi bi-check-circle text-success" title="Weather included"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle text-muted" title="No weather data"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-clock-history display-4 text-muted"></i>
+                        <h6 class="mt-3 text-muted">No Executions Yet</h6>
+                        <p class="text-muted">This wake-up call hasn't been executed yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="testCall(event)">
+                        <i class="bi bi-play-circle"></i> Test Call Now
+                    </button>
+                    <button class="btn btn-success btn-sm" onclick="testSMS(event)">
+                        <i class="bi bi-chat-dots"></i> Test SMS Now
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="openScheduleModal(event);">
+                        <i class="bi bi-calendar-event"></i> Edit Schedule
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="openContactModal(event);">
+                        <i class="bi bi-telephone"></i> Change Contact Method
+                    </button>
+                    <a href="{% url 'web:wakeup_calls' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back to All Calls
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Statistics</h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">{{ executions|length }}</h4>
+                        <small class="text-muted">Total Calls</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">
+                            {% for execution in executions %}{% if execution.status == 'completed' %}{{ forloop.counter0|add:1 }}{% endif %}{% empty %}0{% endfor %}
+                        </h4>
+                        <small class="text-muted">Successful</small>
+                    </div>
+                </div>
+                <hr>
+                <p class="mb-1"><strong>Created:</strong> {{ wakeup_call.created_at|date:"M j, Y" }}</p>
+                <p class="mb-0"><strong>Updated:</strong> {{ wakeup_call.updated_at|timesince }} ago</p>
+            </div>
+        </div>
+        
+        <!-- Help -->
+        <div class="card mt-3 bg-light">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-question-circle"></i> Need Help?</h6>
+                <ul class="mb-0 small">
+                    <li>Voice calls support DTMF and voice commands</li>
+                    <li>Press 1 to snooze for 10 minutes</li>
+                    <li>Press 2 to cancel future calls</li>
+                    <li>Say "reschedule" to change timing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Schedule Modal -->
+<div class="modal fade" id="editScheduleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Schedule</h5>
+                <button type="button" class="btn-close" onclick="closeScheduleModal(event); return false;" aria-label="Close" style="pointer-events: auto; z-index: 1058;"></button>
+            </div>
+            <form method="post" action="{% url 'wakeup_calls:update_schedule' wakeup_call.pk %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="modal_scheduled_time" class="form-label">Wake-up Time</label>
+                        <input type="time" class="form-control" id="modal_scheduled_time" 
+                               name="scheduled_time" value="{{ wakeup_call.scheduled_time|time:'H:i' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_frequency" class="form-label">Frequency</label>
+                        <select class="form-select" id="modal_frequency" name="frequency">
+                            <option value="once" {% if wakeup_call.frequency == 'once' %}selected{% endif %}>Once</option>
+                            <option value="daily" {% if wakeup_call.frequency == 'daily' %}selected{% endif %}>Daily</option>
+                            <option value="weekly" {% if wakeup_call.frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+                            <option value="weekdays" {% if wakeup_call.frequency == 'weekdays' %}selected{% endif %}>Weekdays</option>
+                            <option value="weekends" {% if wakeup_call.frequency == 'weekends' %}selected{% endif %}>Weekends</option>
+                            <option value="custom" {% if wakeup_call.frequency == 'custom' %}selected{% endif %}>Custom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeScheduleModal(event); return false;" style="pointer-events: auto; z-index: 1058;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Contact Method Modal -->
+<div class="modal fade" id="editContactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Contact Method</h5>
+                <button type="button" class="btn-close" onclick="closeContactModal(event); return false;" aria-label="Close" style="pointer-events: auto; z-index: 1058;"></button>
+            </div>
+            <form method="post" action="{% url 'wakeup_calls:update_contact_method' wakeup_call.pk %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Contact Method</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="contact_method" 
+                                   id="modal_contact_call" value="call" 
+                                   {% if wakeup_call.contact_method == 'call' %}checked{% endif %}>
+                            <label class="form-check-label" for="modal_contact_call">
+                                <i class="bi bi-telephone text-primary"></i> Voice Call
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="contact_method" 
+                                   id="modal_contact_sms" value="sms"
+                                   {% if wakeup_call.contact_method == 'sms' %}checked{% endif %}>
+                            <label class="form-check-label" for="modal_contact_sms">
+                                <i class="bi bi-chat-text text-success"></i> SMS Message
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_phone_number" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="modal_phone_number" 
+                               name="phone_number" value="{{ wakeup_call.phone_number }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeContactModal(event); return false;" style="pointer-events: auto; z-index: 1058;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Contact Method</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function pauseCall(event) {
+    if (!event) event = window.event;
+    if (confirm('Are you sure you want to pause this wake-up call?')) {
+        updateCallStatus('paused', event);
+    }
+}
+
+function resumeCall(event) {
+    if (!event) event = window.event;
+    if (confirm('Are you sure you want to resume this wake-up call?')) {
+        updateCallStatus('active', event);
+    }
+}
+
+function cancelCall(event) {
+    if (!event) event = window.event;
+    if (confirm('Are you sure you want to cancel this wake-up call? This action cannot be undone.')) {
+        updateCallStatus('cancelled', event);
+    }
+}
+
+function testCall(event) {
+    if (!event) event = window.event;
+    if (confirm('This will send a test wake-up call/SMS to your phone immediately. Continue?')) {
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Sending...';
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // Make API call to test endpoint
+        fetch(`/api/wakeup-calls/{{ wakeup_call.pk }}/test-now/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showAlert('success', `✅ Test call sent successfully! Check your phone (${data.phone_number}) in a few seconds.`);
+            } else {
+                // Show error message
+                showAlert('danger', `❌ Failed to send test call: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', '❌ Network error. Please try again.');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = originalText;
+        });
+    }
+}
+
+function showAlert(type, message) {
+    // Create alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Insert at top of main content
+    const mainContent = document.querySelector('.col-md-8');
+    mainContent.insertBefore(alertDiv, mainContent.firstChild);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+function testSMS(event) {
+    if (!event) event = window.event;
+    if (confirm('This will send a test SMS to your phone immediately (faster than voice call test). Continue?')) {
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        
+        // Disable button and show loading
+        button.disabled = true;
+        button.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Sending SMS...';
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // Make API call to SMS test endpoint
+        fetch(`/api/wakeup-calls/{{ wakeup_call.pk }}/test-sms/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message with Twilio SID
+                showAlert('success', `✅ Test SMS sent successfully! Check your phone (${data.phone_number}). Twilio SID: ${data.twilio_sid}`);
+            } else {
+                // Show error message
+                showAlert('danger', `❌ Failed to send test SMS: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', '❌ Network error. Please try again.');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = originalText;
+        });
+    }
+}
+
+function updateCallStatus(status, event) {
+    if (!event) event = window.event;
+    
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Get the button that was clicked
+    const clickedButton = event.target.closest('button');
+    const originalText = clickedButton.innerHTML;
+    
+    // Show loading state
+    clickedButton.disabled = true;
+    clickedButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Updating...';
+    
+    // Disable all status buttons during update
+    const allStatusButtons = document.querySelectorAll('.btn-group button[onclick*="Call()"]');
+    allStatusButtons.forEach(btn => btn.disabled = true);
+    
+    // Make AJAX call to update status (stays on same page)
+    fetch(`/wakeup-calls/{{ wakeup_call.pk }}/update-status/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            status: status
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            showAlert('success', `✅ ${data.message || 'Status updated successfully!'}`);
+            
+            // Update the page immediately without reload
+            updatePageStatus(status);
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating status:', error);
+        showAlert('danger', `❌ Failed to update status: ${error.message}`);
+        
+        // Restore button
+        clickedButton.disabled = false;
+        clickedButton.innerHTML = originalText;
+        
+        // Re-enable all buttons
+        allStatusButtons.forEach(btn => btn.disabled = false);
+    });
+}
+
+function updatePageStatus(newStatus) {
+    // Update status badge
+    const statusBadge = document.querySelector('.badge.bg-success, .badge.bg-warning, .badge.bg-secondary');
+    if (statusBadge) {
+        statusBadge.className = 'badge fs-6';
+        if (newStatus === 'active') {
+            statusBadge.classList.add('bg-success');
+            statusBadge.textContent = 'Active';
+        } else if (newStatus === 'paused') {
+            statusBadge.classList.add('bg-warning');
+            statusBadge.textContent = 'Paused';
+        } else {
+            statusBadge.classList.add('bg-secondary');
+            statusBadge.textContent = 'Cancelled';
+        }
+    }
+    
+    // Update button group visibility
+    const btnGroup = document.querySelector('.btn-group[role="group"]');
+    if (btnGroup) {
+        if (newStatus === 'active') {
+            btnGroup.innerHTML = `
+                <button class="btn btn-outline-warning" onclick="pauseCall(event)">
+                    <i class="bi bi-pause"></i> Pause
+                </button>
+                <button class="btn btn-outline-danger" onclick="cancelCall(event)">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            `;
+        } else if (newStatus === 'paused') {
+            btnGroup.innerHTML = `
+                <button class="btn btn-outline-success" onclick="resumeCall(event)">
+                    <i class="bi bi-play"></i> Resume
+                </button>
+                <button class="btn btn-outline-danger" onclick="cancelCall(event)">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            `;
+        } else {
+            // Cancelled - only show cancel button (disabled state)
+            btnGroup.innerHTML = `
+                <button class="btn btn-outline-danger" disabled>
+                    <i class="bi bi-x-circle"></i> Cancelled
+                </button>
+            `;
+        }
+    }
+    
+    // Update next execution display
+    const nextExecutionPara = document.getElementById('next-execution-display');
+    const nextExecutionTime = document.getElementById('next-execution-time');
+    if (nextExecutionPara && nextExecutionTime) {
+        nextExecutionPara.style.display = 'block';
+        if (newStatus === 'active') {
+            // Next execution will be recalculated on server - show loading state
+            nextExecutionTime.innerHTML = '<em>Refreshing...</em> <small>(Refresh page to see updated time)</small>';
+        } else {
+            // Paused or cancelled - no next execution
+            nextExecutionTime.textContent = 'Not scheduled';
+        }
+    }
+    
+    // Update any status displays in the detail cards
+    const statusElements = document.querySelectorAll('[data-status-display]');
+    statusElements.forEach(el => {
+        el.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+    });
+    
+    // Re-enable all buttons
+    const allButtons = document.querySelectorAll('.btn-group button');
+    allButtons.forEach(btn => btn.disabled = false);
+}
+
+// Simple, reliable modal functions
+function openScheduleModal(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    try {
+        const modalElement = document.getElementById('editScheduleModal');
+        if (!modalElement) {
+            alert('Schedule modal not found. Please refresh the page.');
+            return false;
+        }
+        
+        // Simple direct approach - always works
+        modalElement.style.display = 'flex';
+        modalElement.style.alignItems = 'center';
+        modalElement.style.justifyContent = 'center';
+        modalElement.style.zIndex = '1055';
+        modalElement.style.pointerEvents = 'auto'; // Ensure modal is clickable
+        modalElement.style.opacity = '1'; // Ensure full opacity
+        modalElement.classList.add('show');
+        modalElement.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = '0px';
+        
+        // Handle clicks on modal container - close if clicking outside dialog
+        modalElement.onclick = function(e) {
+            // Close if clicking on modal container itself (outside dialog)
+            if (e.target === modalElement) {
+                closeScheduleModal();
+            }
+        };
+        
+        // Add backdrop (only if not exists)
+        let backdrop = document.getElementById('schedule-modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.id = 'schedule-modal-backdrop';
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.style.position = 'fixed';
+            backdrop.style.top = '0';
+            backdrop.style.left = '0';
+            backdrop.style.width = '100vw';
+            backdrop.style.height = '100vh';
+            backdrop.style.zIndex = '1050';
+            backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            backdrop.style.pointerEvents = 'none'; // NON-INTERACTIVE - clicks pass through to modal container
+            document.body.appendChild(backdrop);
+        }
+        
+        // Ensure modal dialog is clickable and above backdrop
+        const modalDialog = modalElement.querySelector('.modal-dialog');
+        if (modalDialog) {
+            modalDialog.style.pointerEvents = 'auto';
+            modalDialog.style.zIndex = '1056';
+            modalDialog.style.position = 'relative';
+            // Allow all interactive elements to work normally
+            modalDialog.addEventListener('click', function(e) {
+                const target = e.target;
+                const isButton = target.tagName === 'BUTTON' || target.closest('button');
+                const isLink = target.tagName === 'A' || target.closest('a');
+                const isInput = target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA';
+                const isForm = target.tagName === 'FORM' || target.closest('form');
+                
+                // Always allow buttons, links, inputs, and forms to work
+                if (isButton || isLink || isInput || isForm) {
+                    return; // Don't stop propagation - let them work normally
+                }
+                
+                // Only stop propagation for background/clicks on dialog itself
+                if (target === modalDialog) {
+                    e.stopPropagation();
+                }
+            }, false); // Use bubble phase so buttons fire first
+        }
+        
+        // Ensure modal content is solid white and opaque
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.backgroundColor = '#ffffff';
+            modalContent.style.opacity = '1';
+            modalContent.style.pointerEvents = 'auto';
+            modalContent.style.zIndex = '1057';
+        }
+        
+        // Focus on first input
+        const firstInput = modalElement.querySelector('input, select, textarea');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    } catch (error) {
+        console.error('Error opening schedule modal:', error);
+        alert('Error opening modal. Please refresh the page.');
+    }
+    
+    return false;
+}
+
+function openContactModal(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    try {
+        const modalElement = document.getElementById('editContactModal');
+        if (!modalElement) {
+            alert('Contact modal not found. Please refresh the page.');
+            return false;
+        }
+        
+        // Simple direct approach - always works
+        modalElement.style.display = 'flex';
+        modalElement.style.alignItems = 'center';
+        modalElement.style.justifyContent = 'center';
+        modalElement.style.zIndex = '1055';
+        modalElement.style.pointerEvents = 'auto'; // Ensure modal is clickable
+        modalElement.style.opacity = '1'; // Ensure full opacity
+        modalElement.classList.add('show');
+        modalElement.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = '0px';
+        
+        // Handle clicks on modal container - close if clicking outside dialog
+        modalElement.onclick = function(e) {
+            // Close if clicking on modal container itself (outside dialog)
+            if (e.target === modalElement) {
+                closeContactModal();
+            }
+        };
+        
+        // Add backdrop (only if not exists) - NON-INTERACTIVE
+        let backdrop = document.getElementById('contact-modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.id = 'contact-modal-backdrop';
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.style.position = 'fixed';
+            backdrop.style.top = '0';
+            backdrop.style.left = '0';
+            backdrop.style.width = '100vw';
+            backdrop.style.height = '100vh';
+            backdrop.style.zIndex = '1050';
+            backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            backdrop.style.pointerEvents = 'none'; // NON-INTERACTIVE - clicks pass through
+            document.body.appendChild(backdrop);
+        }
+        
+        // Ensure modal dialog is clickable and above backdrop
+        const modalDialog = modalElement.querySelector('.modal-dialog');
+        if (modalDialog) {
+            modalDialog.style.pointerEvents = 'auto';
+            modalDialog.style.zIndex = '1056';
+            modalDialog.style.position = 'relative';
+            // Allow all interactive elements to work normally
+            modalDialog.addEventListener('click', function(e) {
+                const target = e.target;
+                const isButton = target.tagName === 'BUTTON' || target.closest('button');
+                const isLink = target.tagName === 'A' || target.closest('a');
+                const isInput = target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA';
+                const isForm = target.tagName === 'FORM' || target.closest('form');
+                
+                // Always allow buttons, links, inputs, and forms to work
+                if (isButton || isLink || isInput || isForm) {
+                    return; // Don't stop propagation - let them work normally
+                }
+                
+                // Only stop propagation for background/clicks on dialog itself
+                if (target === modalDialog) {
+                    e.stopPropagation();
+                }
+            }, false); // Use bubble phase so buttons fire first
+        }
+        
+        // Ensure modal content is solid white and opaque
+        const modalContent = modalElement.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.backgroundColor = '#ffffff';
+            modalContent.style.opacity = '1';
+            modalContent.style.pointerEvents = 'auto';
+            modalContent.style.zIndex = '1057';
+        }
+        
+        // Focus on first input
+        const firstInput = modalElement.querySelector('input, select, textarea');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    } catch (error) {
+        console.error('Error opening contact modal:', error);
+        alert('Error opening modal. Please refresh the page.');
+    }
+    
+    return false;
+}
+
+function closeScheduleModal(event) {
+    try {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        }
+        
+        const modalElement = document.getElementById('editScheduleModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+            modalElement.classList.remove('show');
+            modalElement.setAttribute('aria-hidden', 'true');
+            modalElement.removeAttribute('aria-modal');
+            modalElement.style.opacity = '0';
+        }
+        
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        
+        const backdrop = document.getElementById('schedule-modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error closing schedule modal:', error);
+        // Force close by hiding modal directly
+        const modalElement = document.getElementById('editScheduleModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+        }
+        return false;
+    }
+}
+
+function closeContactModal(event) {
+    try {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        }
+        
+        const modalElement = document.getElementById('editContactModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+            modalElement.classList.remove('show');
+            modalElement.setAttribute('aria-hidden', 'true');
+            modalElement.removeAttribute('aria-modal');
+            modalElement.style.opacity = '0';
+        }
+        
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        
+        const backdrop = document.getElementById('contact-modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error closing contact modal:', error);
+        // Force close by hiding modal directly
+        const modalElement = document.getElementById('editContactModal');
+        if (modalElement) {
+            modalElement.style.display = 'none';
+        }
+        return false;
+    }
+}
+
+// ESC key support for closing modals
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const scheduleModal = document.getElementById('editScheduleModal');
+        const contactModal = document.getElementById('editContactModal');
+        
+        if (scheduleModal && scheduleModal.style.display === 'block') {
+            closeScheduleModal();
+        }
+        if (contactModal && contactModal.style.display === 'block') {
+            closeContactModal();
+        }
+    }
+});
+
+// Ensure modals are hidden by default and have proper styling
+document.addEventListener('DOMContentLoaded', function() {
+    const scheduleModal = document.getElementById('editScheduleModal');
+    const contactModal = document.getElementById('editContactModal');
+    
+    // Add CSS to ensure modals work properly
+    const style = document.createElement('style');
+    style.textContent = `
+        #editScheduleModal, #editContactModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1055;
+        }
+        #editScheduleModal.show, #editContactModal.show {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            opacity: 1 !important;
+        }
+        /* Override Bootstrap fade class to ensure full opacity */
+        #editScheduleModal.fade.show, #editContactModal.fade.show {
+            opacity: 1 !important;
+        }
+        #editScheduleModal.fade, #editContactModal.fade {
+            opacity: 0;
+            transition: opacity 0.15s linear;
+        }
+        #editScheduleModal .modal-dialog, #editContactModal .modal-dialog {
+            position: relative;
+            width: auto;
+            max-width: 500px;
+            margin: 1.75rem auto;
+            pointer-events: auto !important;
+            z-index: 1056;
+        }
+        #editScheduleModal .modal-content, #editContactModal .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: #ffffff !important;
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            outline: 0;
+            opacity: 1 !important;
+            z-index: 1057;
+        }
+        #editScheduleModal.show, #editContactModal.show {
+            pointer-events: auto;
+            background-color: transparent;
+        }
+        #editScheduleModal.show .modal-dialog, #editContactModal.show .modal-dialog {
+            pointer-events: auto !important;
+        }
+        #editScheduleModal.show .modal-content, #editContactModal.show .modal-content {
+            opacity: 1 !important;
+            background-color: #ffffff !important;
+        }
+        /* Ensure all buttons in modals are clickable */
+        #editScheduleModal button, #editContactModal button {
+            pointer-events: auto !important;
+            z-index: 1058;
+            position: relative;
+            cursor: pointer;
+        }
+        #editScheduleModal .modal-header, #editContactModal .modal-header,
+        #editScheduleModal .modal-footer, #editContactModal .modal-footer {
+            pointer-events: auto !important;
+            z-index: 1057;
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Hide modals by default
+    if (scheduleModal) {
+        scheduleModal.style.display = 'none';
+    }
+    if (contactModal) {
+        contactModal.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

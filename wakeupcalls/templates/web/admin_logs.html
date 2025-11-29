@@ -1,0 +1,209 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}System Logs - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .log-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-success { border-left: 4px solid #28a745; }
+    .log-warning { border-left: 4px solid #ffc107; }
+    .log-danger { border-left: 4px solid #dc3545; }
+    .log-info { border-left: 4px solid #17a2b8; }
+    .admin-nav {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .admin-nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .admin-nav a:hover {
+        background: #5a67d8;
+        color: white;
+    }
+    .admin-nav a.active {
+        background: #4c51bf;
+    }
+    .status-badge {
+        font-size: 0.8em;
+        padding: 2px 8px;
+        border-radius: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📝 System Logs</h1>
+        <span class="badge badge-info">Last 50 Records</span>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="{% url 'web:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="{% url 'web:admin_users' %}"><i class="bi bi-people"></i> Users</a>
+        <a href="{% url 'web:admin_logs' %}" class="active"><i class="bi bi-file-text"></i> Logs</a>
+        <a href="{% url 'web:admin_demo' %}"><i class="bi bi-database"></i> Demo Data</a>
+        <a href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Django Admin</a>
+    </div>
+
+    <!-- Recent Executions -->
+    <div class="admin-card">
+        <h5><i class="bi bi-play-circle"></i> Recent Wake-up Call Executions</h5>
+        {% for execution in executions %}
+        <div class="log-item log-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}danger{% elif execution.status == 'pending' %}warning{% else %}info{% endif %}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ execution.wakeup_call.name }}</strong> - {{ execution.wakeup_call.user.email }}
+                    <br><small class="text-muted">
+                        Scheduled: {{ execution.scheduled_for|date:"M d, Y H:i" }} | 
+                        {% if execution.executed_at %}
+                            Executed: {{ execution.executed_at|date:"M d, Y H:i" }}
+                        {% else %}
+                            Not executed yet
+                        {% endif %}
+                        {% if execution.twilio_sid %}
+                            | Twilio SID: {{ execution.twilio_sid }}
+                        {% endif %}
+                    </small>
+                    {% if execution.error_message %}
+                        <br><small class="text-danger">Error: {{ execution.error_message }}</small>
+                    {% endif %}
+                    {% if execution.user_response %}
+                        <br><small class="text-info">User Response: {{ execution.user_response }}</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="status-badge badge-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}danger{% elif execution.status == 'pending' %}warning{% else %}info{% endif %}">
+                        {{ execution.status|title }}
+                    </span>
+                    {% if execution.wakeup_call.is_demo %}
+                        <span class="status-badge badge-secondary">Demo</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center py-4">No executions found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="admin-card">
+        <h5><i class="bi bi-bell"></i> Recent Notifications</h5>
+        {% for notification in notifications %}
+        <div class="log-item log-{% if notification.status == 'sent' or notification.status == 'delivered' %}success{% elif notification.status == 'failed' %}danger{% else %}info{% endif %}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ notification.notification_type|title }}</strong> to {{ notification.recipient_phone }} - {{ notification.user.email }}
+                    <br><small class="text-muted">
+                        Sent: {{ notification.sent_at|date:"M d, Y H:i" }}
+                        {% if notification.delivered_at %}
+                            | Delivered: {{ notification.delivered_at|date:"M d, Y H:i" }}
+                        {% endif %}
+                        {% if notification.twilio_sid %}
+                            | Twilio SID: {{ notification.twilio_sid }}
+                        {% endif %}
+                    </small>
+                    {% if notification.twilio_error_message %}
+                        <br><small class="text-danger">Error: {{ notification.twilio_error_message }}</small>
+                    {% endif %}
+                    {% if notification.message_content %}
+                        <br><small class="text-info">Message: {{ notification.message_content|truncatechars:100 }}</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="status-badge badge-{% if notification.status == 'sent' or notification.status == 'delivered' %}success{% elif notification.status == 'failed' %}danger{% else %}info{% endif %}">
+                        {{ notification.status|title }}
+                    </span>
+                    {% if notification.is_demo %}
+                        <span class="status-badge badge-secondary">Demo</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center py-4">No notifications found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Failed Operations -->
+    {% if failed_executions %}
+    <div class="admin-card">
+        <h5><i class="bi bi-exclamation-triangle text-danger"></i> Recent Failed Operations</h5>
+        {% for execution in failed_executions %}
+        <div class="log-item log-danger">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ execution.wakeup_call.name }}</strong> - {{ execution.wakeup_call.user.email }}
+                    <br><small class="text-muted">
+                        Failed at: {{ execution.executed_at|date:"M d, Y H:i" }}
+                        {% if execution.twilio_sid %}
+                            | Twilio SID: {{ execution.twilio_sid }}
+                        {% endif %}
+                    </small>
+                    {% if execution.error_message %}
+                        <br><small class="text-danger"><strong>Error:</strong> {{ execution.error_message }}</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="status-badge badge-danger">Failed</span>
+                    {% if execution.wakeup_call.is_demo %}
+                        <span class="status-badge badge-secondary">Demo</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Log Management -->
+    <div class="admin-card">
+        <h5><i class="bi bi-tools"></i> Log Management</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <h6>📊 Log Statistics</h6>
+                <p><strong>Total Executions:</strong> {{ executions.count }}</p>
+                <p><strong>Total Notifications:</strong> {{ notifications.count }}</p>
+                <p><strong>Failed Operations:</strong> {{ failed_executions.count }}</p>
+            </div>
+            <div class="col-md-6">
+                <h6>🔧 Management Actions</h6>
+                <a href="{% url 'web:celery_monitor' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-activity"></i> Monitor Celery
+                </a>
+                <a href="{% url 'admin:wakeup_calls_wakeupcallexecution_changelist' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-list"></i> All Executions
+                </a>
+                <a href="{% url 'admin:notifications_notificationlog_changelist' %}" class="btn btn-outline-info btn-sm">
+                    <i class="bi bi-bell"></i> All Notifications
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

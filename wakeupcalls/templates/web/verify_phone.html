@@ -1,0 +1,243 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Verify Phone - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="bi bi-shield-check"></i> Verify Phone Number</h4>
+                <p class="text-muted mb-0">Verify your phone number to receive wake-up calls</p>
+            </div>
+            <div class="card-body">
+                {% if not user.phone_verified %}
+                    <!-- Step 1: Send Verification Code -->
+                    <div id="send-code-form">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="send_code">
+                            
+                            <div class="mb-3">
+                                <label for="phone_number" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                           value="{{ user.phone_number }}" placeholder="+1234567890" required>
+                                </div>
+                                <div class="form-text">
+                                    Include country code (e.g., +1 for US). We'll send a verification code via SMS.
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-send"></i> Send Verification Code
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="autoVerifyPhone()">
+                                    <i class="bi bi-exclamation-triangle"></i> Development Bypass
+                                </button>
+                            </div>
+                            <div class="mt-3">
+                                <div class="alert alert-warning">
+                                    <small>
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        <strong>Development Mode:</strong> 
+                                        "Development Bypass" skips Twilio verification for testing with trial accounts.
+                                        <strong>For production:</strong> Upgrade Twilio account to enable real verification.
+                                    </small>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Step 2: Verify Code (Initially Hidden) -->
+                    <div id="verify-code-form" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            We've sent a 6-digit verification code to your phone. Enter it below.
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="verify_code">
+                            <input type="hidden" name="phone_number" id="hidden_phone_number">
+                            
+                            <div class="mb-3">
+                                <label for="verification_code" class="form-label">Verification Code</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    <input type="text" class="form-control text-center" id="verification_code" 
+                                           name="verification_code" placeholder="123456" maxlength="6" required>
+                                </div>
+                                <div class="form-text">
+                                    Enter the 6-digit code sent to your phone.
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Verify Code
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="showSendCodeForm()">
+                                    <i class="bi bi-arrow-left"></i> Use Different Number
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                Didn't receive the code? 
+                                <a href="#" onclick="resendCode()" class="text-decoration-none">Resend</a>
+                            </small>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Already Verified -->
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        </div>
+                        <h5 class="text-success">Phone Number Verified!</h5>
+                        <p class="text-muted">
+                            Your phone number <strong>{{ user.phone_number }}</strong> has been verified.
+                            You can now receive wake-up calls.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Create Wake-up Call
+                            </a>
+                            <a href="{% url 'web:profile' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Profile
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Help Information -->
+        <div class="card mt-3 bg-light">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-question-circle"></i> Why Verify Your Phone?</h6>
+                <ul class="mb-0 small">
+                    <li>Ensures you own the phone number</li>
+                    <li>Required to receive wake-up calls</li>
+                    <li>Prevents unauthorized use of your number</li>
+                    <li>Helps us deliver reliable service</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showVerifyCodeForm(phoneNumber) {
+    document.getElementById('send-code-form').style.display = 'none';
+    document.getElementById('verify-code-form').style.display = 'block';
+    document.getElementById('hidden_phone_number').value = phoneNumber;
+    document.getElementById('verification_code').focus();
+}
+
+function showSendCodeForm() {
+    document.getElementById('send-code-form').style.display = 'block';
+    document.getElementById('verify-code-form').style.display = 'none';
+}
+
+function resendCode() {
+    const phoneNumber = document.getElementById('hidden_phone_number').value;
+    
+    // Create a form to resend the code
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.style.display = 'none';
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'send_code';
+    
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'hidden';
+    phoneInput.name = 'phone_number';
+    phoneInput.value = phoneNumber;
+    
+    form.appendChild(csrfInput);
+    form.appendChild(actionInput);
+    form.appendChild(phoneInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Auto-Verify Phone Number with Twilio
+function autoVerifyPhone() {
+    const phoneNumber = document.getElementById('phone_number').value;
+    
+    if (!phoneNumber) {
+        alert('Please enter a phone number first.');
+        return;
+    }
+    
+    if (!phoneNumber.startsWith('+')) {
+        alert('Please include the country code (e.g., +1 for US, +91 for India).');
+        return;
+    }
+    
+    if (confirm(`⚠️ DEVELOPMENT BYPASS\n\nVerify ${phoneNumber} for testing?\n\nThis bypasses Twilio verification for trial accounts.\nFor production, upgrade your Twilio account.`)) {
+        // Show loading state
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i> Verifying...';
+        button.disabled = true;
+        
+        fetch('/auto-verify-phone/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                phone_number: phoneNumber
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`✅ ${data.message}`);
+                // Reload page to show verified status
+                window.location.reload();
+            } else {
+                alert(`❌ Auto-verification failed: ${data.error}`);
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred during auto-verification.');
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+    }
+}
+
+// Auto-show verify form if we just sent a code
+{% if messages %}
+    {% for message in messages %}
+        {% if 'sent' in message.message|lower %}
+            const phoneNumber = document.getElementById('phone_number').value;
+            if (phoneNumber) {
+                showVerifyCodeForm(phoneNumber);
+            }
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</script>
+{% endblock %}

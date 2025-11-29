@@ -1,2 +1,102 @@
 wakeupcalls/env.example
 wakeupcalls/env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.py.class
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+media/
+staticfiles/
+static/
+
+# Environment
+.env
+.env.*
+*.env
+env.example
+
+# Docker
+*.pid
+docker-compose.yml
+docker-compose.prod.yml
+Dockerfile
+
+# VS Code
+.vscode/
+
+# IDEs
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# MacOS
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Migrations
+**/migrations/**/__pycache__/
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/*.pyd
+
+# Node
+node_modules/
+
+# Test
+coverage/
+htmlcov/
+*.cover
+*.py,cover
+
+# Others
+*.swp
+*.bak
+*.tmp
+
+# System
+Thumbs.db
+
+# Compiled
+*.so
+
+# Backup
+*.orig
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Misc
+*.out
+
+# Ignore secrets
+secrets.json
+
+# Ignore export/import files
+export_sqlite_data.py
+import_clean.py
+import_to_postgres.py
+migrate_sqlite_to_postgres.py
+
+# Ignore database dumps
+*.dump
+*.sql

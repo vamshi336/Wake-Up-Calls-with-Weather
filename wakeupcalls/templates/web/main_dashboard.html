@@ -1,0 +1,435 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard - Vamshi Wake-up Calls{% endblock %}
+
+{% block extra_css %}
+<style>
+    .requirement-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #667eea;
+    }
+    .requirement-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .stat-number {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .action-btn {
+        margin: 5px;
+        min-width: 120px;
+    }
+    .log-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9em;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .status-success { color: #28a745; }
+    .status-failed { color: #dc3545; }
+    .status-pending { color: #ffc107; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="requirement-header">
+        <h1>🎯 Vamshi Wake-up Calls - Complete Requirements Dashboard</h1>
+        <p class="mb-0">All Django app requirements in one place</p>
+    </div>
+
+    <!-- Requirement 1: Multiple Users & Wake-up Calls -->
+    <div class="requirement-card">
+        <h3>📞 Requirement 1: Multiple Users & Wake-up Call Scheduling</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ user_stats.total_calls }}</div>
+                    <div>Your Calls</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ user_stats.active_calls }}</div>
+                    <div>Active</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ user_stats.total_executions }}</div>
+                    <div>Executions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{% if user_stats.phone_verified %}✅{% else %}❌{% endif %}</div>
+                    <div>Phone Verified</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Your Wake-up Calls</h5>
+                {% for call in user_calls %}
+                <div class="log-item">
+                    <strong>{{ call.name }}</strong>
+                    <span class="badge badge-{% if call.status == 'active' %}success{% elif call.status == 'paused' %}warning{% else %}secondary{% endif %}">
+                        {{ call.status|title }}
+                    </span>
+                    {% if call.is_demo %}
+                        <span class="badge badge-info">Demo</span>
+                    {% endif %}
+                    <br><small class="text-muted">
+                        {{ call.contact_method|title }} at {{ call.scheduled_time }} | 
+                        {{ call.frequency|title }}
+                        {% if call.include_weather %} | Weather: Yes{% endif %}
+                    </small>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-success" onclick="testCall({{ call.id }})">
+                            Test Now
+                        </button>
+                        <a href="{% url 'web:wakeup_call_detail' call.id %}" class="btn btn-sm btn-primary">
+                            Details
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No wake-up calls yet. <a href="{% url 'web:create_wakeup_call' %}">Create one!</a></p>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6">
+                <h5>Recent Executions</h5>
+                {% for execution in user_executions %}
+                <div class="log-item">
+                    <strong>{{ execution.wakeup_call.name }}</strong>
+                    <span class="status-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}failed{% else %}pending{% endif %}">
+                        {{ execution.status|title }}
+                    </span>
+                    <br><small class="text-muted">
+                        {% if execution.executed_at %}
+                            {{ execution.executed_at|date:"M d, H:i" }}
+                        {% else %}
+                            Scheduled: {{ execution.scheduled_for|date:"M d, H:i" }}
+                        {% endif %}
+                        {% if execution.twilio_sid %} | SID: {{ execution.twilio_sid }}{% endif %}
+                    </small>
+                    {% if execution.error_message %}
+                        <br><small class="text-danger">{{ execution.error_message }}</small>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="text-muted">No executions yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-primary action-btn">
+                Create New Call
+            </a>
+            <a href="{% url 'web:wakeup_calls' %}" class="btn btn-outline-primary action-btn">
+                Manage All Calls
+            </a>
+            {% if not user_stats.phone_verified %}
+            <a href="{% url 'web:verify_phone' %}" class="btn btn-warning action-btn">
+                Verify Phone
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Requirement 2: API & External Integration -->
+    <div class="requirement-card">
+        <h3>🔌 Requirement 2: API & External Integration</h3>
+        <p><strong>✅ REST API Available:</strong> Clean, intuitive design</p>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h6>New Simple API Design:</h6>
+                <div class="bg-light p-3 rounded">
+                    <code>
+                        PATCH /api/wakeup-calls/{id}/ {"status": "cancelled"}<br>
+                        PATCH /api/wakeup-calls/{id}/ {"scheduled_time": "08:00:00"}<br>
+                        PATCH /api/wakeup-calls/{id}/ {"contact_method": "sms"}
+                    </code>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6>Available Endpoints:</h6>
+                <ul>
+                    <li>GET/POST /api/wakeup-calls/ - List/Create</li>
+                    <li>GET/PATCH/DELETE /api/wakeup-calls/{id}/ - Manage</li>
+                    <li>POST /api/wakeup-calls/{id}/test-now/ - Test</li>
+                    <li>GET /api/wakeup-calls/executions/ - History</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <a href="/api/" class="btn btn-info action-btn">
+                API Root
+            </a>
+            <a href="/api/docs/" class="btn btn-outline-info action-btn">
+                API Documentation
+            </a>
+            <a href="{% url 'web:api_test' %}" class="btn btn-secondary action-btn">
+                Test API
+            </a>
+        </div>
+    </div>
+
+    <!-- Requirement 3: Demo Data (30+ Events) -->
+    <div class="requirement-card">
+        <h3>🧪 Requirement 3: Demo Data & Logging (30+ Events)</h3>
+        {% if is_admin %}
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.demo_users }}</div>
+                    <div>Demo Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.demo_calls }}</div>
+                    <div>Demo Calls</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.executions_24h }}</div>
+                    <div>Executions (24h)</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.failed_24h }}</div>
+                    <div>Failed (24h)</div>
+                </div>
+            </div>
+        </div>
+        
+        <p><strong>✅ Demo Data:</strong> All events logged but suppressed from actual delivery</p>
+        
+        <div class="mt-3">
+            <button class="btn btn-success action-btn" onclick="adminAction('seed_demo_data')">
+                Seed Demo Data (30+ Events)
+            </button>
+            <button class="btn btn-danger action-btn" onclick="adminAction('clear_demo_data')">
+                Clear Demo Data
+            </button>
+        </div>
+        {% else %}
+        <p><strong>✅ Demo Mode Active:</strong> All calls/SMS are logged but not actually sent</p>
+        <p class="text-muted">Admin access required for demo data management</p>
+        {% endif %}
+    </div>
+
+    <!-- Requirement 4: User & Admin Roles -->
+    {% if is_admin %}
+    <div class="requirement-card">
+        <h3>👑 Requirement 4: User & Admin Roles</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.total_users }}</div>
+                    <div>Total Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.verified_users }}</div>
+                    <div>Verified</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.admin_users }}</div>
+                    <div>Admins</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ admin_data.active_calls }}</div>
+                    <div>Active Calls</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Recent Users</h5>
+                {% for user in admin_data.recent_users %}
+                <div class="log-item">
+                    <strong>{{ user.email }}</strong>
+                    {% if user.role == 'admin' %}
+                        <span class="badge badge-danger">Admin</span>
+                    {% endif %}
+                    {% if user.phone_verified %}
+                        <span class="badge badge-success">Verified</span>
+                    {% else %}
+                        <span class="badge badge-warning">Unverified</span>
+                    {% endif %}
+                    <br><small class="text-muted">
+                        Joined: {{ user.date_joined|date:"M d, Y" }}
+                        {% if user.last_login %} | Last: {{ user.last_login|date:"M d" }}{% endif %}
+                    </small>
+                    {% if not user.phone_verified %}
+                    <div class="mt-1">
+                        <button class="btn btn-sm btn-success" onclick="adminAction('verify_user_phone', {{ user.id }})">
+                            Verify Phone
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6">
+                <h5>Recent System Activity</h5>
+                {% for execution in admin_data.recent_executions %}
+                <div class="log-item">
+                    <strong>{{ execution.wakeup_call.name }}</strong> - {{ execution.wakeup_call.user.email }}
+                    <span class="status-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}failed{% else %}pending{% endif %}">
+                        {{ execution.status|title }}
+                    </span>
+                    <br><small class="text-muted">
+                        {% if execution.executed_at %}
+                            {{ execution.executed_at|date:"M d, H:i" }}
+                        {% else %}
+                            Scheduled: {{ execution.scheduled_for|date:"M d, H:i" }}
+                        {% endif %}
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <a href="/admin/" class="btn btn-secondary action-btn">
+                Django Admin
+            </a>
+            <a href="{% url 'web:celery_monitor' %}" class="btn btn-info action-btn">
+                System Monitor
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="requirement-card">
+        <h3>👤 Requirement 4: User Role</h3>
+        <p><strong>✅ User Role Active:</strong> You have standard user access</p>
+        <p>Current Role: <span class="badge badge-primary">{{ user.role|title }}</span></p>
+        <p class="text-muted">Admin features are available to admin users</p>
+    </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="requirement-card">
+        <h3>⚡ Quick Actions</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'web:create_wakeup_call' %}" class="btn btn-primary action-btn">
+                    📞 Create Wake-up Call
+                </a>
+                <a href="{% url 'web:profile' %}" class="btn btn-info action-btn">
+                    👤 Manage Profile
+                </a>
+                <a href="/api/docs/" class="btn btn-secondary action-btn">
+                    📚 API Docs
+                </a>
+                {% if is_admin %}
+                <a href="/admin/" class="btn btn-warning action-btn">
+                    ⚙️ Django Admin
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function testCall(callId) {
+    if (confirm('This will test the wake-up call immediately. Continue?')) {
+        fetch(`/dashboard/test-call/${callId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ ' + data.message);
+                location.reload();
+            } else {
+                alert('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while testing the call.');
+        });
+    }
+}
+
+function adminAction(action, userId = null) {
+    const confirmMessages = {
+        'seed_demo_data': 'This will create 30+ demo events. Continue?',
+        'clear_demo_data': '⚠️ This will permanently delete all demo data. Continue?',
+        'verify_user_phone': 'Manually verify this user\'s phone?',
+        'make_admin': 'Make this user an admin?'
+    };
+    
+    if (confirm(confirmMessages[action] || 'Continue with this action?')) {
+        const payload = { action: action };
+        if (userId) payload.user_id = userId;
+        
+        fetch('/dashboard/admin-action/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ ' + data.message);
+                location.reload();
+            } else {
+                alert('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    }
+}
+</script>
+{% endblock %}

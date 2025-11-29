@@ -1,0 +1,279 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Vamshi Wake-up Calls{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #667eea;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    .health-indicator {
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        display: inline-block;
+        margin: 2px;
+    }
+    .health-good { background: #d4edda; color: #155724; }
+    .health-warning { background: #fff3cd; color: #856404; }
+    .health-danger { background: #f8d7da; color: #721c24; }
+    .recent-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    .recent-item:last-child { border-bottom: none; }
+    .admin-nav {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .admin-nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .admin-nav a:hover {
+        background: #5a67d8;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Admin Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>👑 Admin Dashboard</h1>
+        <span class="badge badge-primary">Admin Access</span>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="{% url 'web:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="{% url 'web:admin_users' %}"><i class="bi bi-people"></i> Users</a>
+        <a href="{% url 'web:admin_logs' %}"><i class="bi bi-file-text"></i> Logs</a>
+        <a href="{% url 'web:admin_demo' %}"><i class="bi bi-database"></i> Demo Data</a>
+        <a href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Django Admin</a>
+        <a href="{% url 'web:celery_monitor' %}"><i class="bi bi-cpu"></i> Monitor</a>
+    </div>
+
+    <!-- System Health -->
+    <div class="admin-card">
+        <h4><i class="bi bi-heart-pulse"></i> System Health</h4>
+        <div class="mt-3">
+            <span class="health-indicator {% if system_health.unverified_users < 5 %}health-good{% elif system_health.unverified_users < 20 %}health-warning{% else %}health-danger{% endif %}">
+                📱 {{ system_health.unverified_users }} Unverified Users
+            </span>
+            <span class="health-indicator {% if system_health.failed_executions_rate < 5 %}health-good{% elif system_health.failed_executions_rate < 15 %}health-warning{% else %}health-danger{% endif %}">
+                ❌ {{ system_health.failed_executions_rate|floatformat:1 }}% Failure Rate (24h)
+            </span>
+            <span class="health-indicator {% if system_health.pending_verifications < 10 %}health-good{% else %}health-warning{% endif %}">
+                ⏳ {{ system_health.pending_verifications }} Pending Verifications
+            </span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <!-- User Stats -->
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_stats.total_users }}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="admin-card">
+                <h6>👥 User Details</h6>
+                <p><strong>New (24h):</strong> {{ user_stats.new_users_24h }}</p>
+                <p><strong>Verified:</strong> {{ user_stats.verified_users }}</p>
+                <p><strong>Admins:</strong> {{ user_stats.admin_users }}</p>
+                <p><strong>Active (7d):</strong> {{ user_stats.active_users_7d }}</p>
+            </div>
+        </div>
+
+        <!-- Call Stats -->
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ call_stats.total_calls }}</div>
+                <div class="stat-label">Wake-up Calls</div>
+            </div>
+            <div class="admin-card">
+                <h6>📞 Call Details</h6>
+                <p><strong>Active:</strong> {{ call_stats.active_calls }}</p>
+                <p><strong>Demo:</strong> {{ call_stats.demo_calls }}</p>
+                <p><strong>With Weather:</strong> {{ call_stats.calls_with_weather }}</p>
+                <p><strong>Voice:</strong> {{ call_stats.voice_calls }} | <strong>SMS:</strong> {{ call_stats.sms_calls }}</p>
+            </div>
+        </div>
+
+        <!-- Execution Stats -->
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ execution_stats.total_executions }}</div>
+                <div class="stat-label">Total Executions</div>
+            </div>
+            <div class="admin-card">
+                <h6>📈 Execution Details</h6>
+                <p><strong>Today:</strong> {{ execution_stats.executions_24h }}</p>
+                <p><strong>Successful:</strong> {{ execution_stats.successful_24h }}</p>
+                <p><strong>Failed:</strong> {{ execution_stats.failed_24h }}</p>
+                <p><strong>Pending:</strong> {{ execution_stats.pending_executions }}</p>
+            </div>
+        </div>
+
+        <!-- Notification Stats -->
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">{{ notification_stats.total_notifications }}</div>
+                <div class="stat-label">Notifications</div>
+            </div>
+            <div class="admin-card">
+                <h6>📝 Notification Details</h6>
+                <p><strong>SMS (24h):</strong> {{ notification_stats.sms_sent_24h }}</p>
+                <p><strong>Voice (24h):</strong> {{ notification_stats.voice_calls_24h }}</p>
+                <p><strong>Demo:</strong> {{ notification_stats.demo_notifications }}</p>
+                <p><strong>Failed (24h):</strong> {{ notification_stats.failed_notifications_24h }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <!-- Recent Users -->
+        <div class="col-md-4">
+            <div class="admin-card">
+                <h5><i class="bi bi-person-plus"></i> Recent Users</h5>
+                {% for user in recent_users %}
+                <div class="recent-item">
+                    <div>
+                        <strong>{{ user.email }}</strong>
+                        <br><small class="text-muted">{{ user.date_joined|date:"M d, H:i" }}</small>
+                    </div>
+                    <div>
+                        {% if user.role == 'admin' %}
+                            <span class="badge badge-danger">Admin</span>
+                        {% endif %}
+                        {% if user.phone_verified %}
+                            <span class="badge badge-success">Verified</span>
+                        {% else %}
+                            <span class="badge badge-warning">Unverified</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No recent users</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Calls -->
+        <div class="col-md-4">
+            <div class="admin-card">
+                <h5><i class="bi bi-alarm"></i> Recent Wake-up Calls</h5>
+                {% for call in recent_calls %}
+                <div class="recent-item">
+                    <div>
+                        <strong>{{ call.name }}</strong>
+                        <br><small class="text-muted">{{ call.user.email }} - {{ call.created_at|date:"M d, H:i" }}</small>
+                    </div>
+                    <div>
+                        <span class="badge badge-{% if call.status == 'active' %}success{% elif call.status == 'paused' %}warning{% else %}secondary{% endif %}">
+                            {{ call.status|title }}
+                        </span>
+                        {% if call.is_demo %}
+                            <span class="badge badge-info">Demo</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No recent calls</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Executions -->
+        <div class="col-md-4">
+            <div class="admin-card">
+                <h5><i class="bi bi-play-circle"></i> Recent Executions</h5>
+                {% for execution in recent_executions %}
+                <div class="recent-item">
+                    <div>
+                        <strong>{{ execution.wakeup_call.name }}</strong>
+                        <br><small class="text-muted">{{ execution.wakeup_call.user.email }} - {{ execution.executed_at|date:"M d, H:i" }}</small>
+                    </div>
+                    <div>
+                        <span class="badge badge-{% if execution.status == 'completed' %}success{% elif execution.status == 'failed' %}danger{% elif execution.status == 'pending' %}warning{% else %}info{% endif %}">
+                            {{ execution.status|title }}
+                        </span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No recent executions</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="admin-card">
+        <h5><i class="bi bi-lightning"></i> Quick Actions</h5>
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{% url 'web:admin_users' %}" class="btn btn-outline-primary btn-block">
+                    <i class="bi bi-people"></i> Manage Users
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'web:admin_logs' %}" class="btn btn-outline-info btn-block">
+                    <i class="bi bi-file-text"></i> View Logs
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'web:bulk_phone_verification' %}" class="btn btn-outline-success btn-block">
+                    <i class="bi bi-shield-check"></i> Bulk Verify Phones
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'web:admin_demo' %}" class="btn btn-outline-warning btn-block">
+                    <i class="bi bi-database"></i> Demo Data
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary btn-block">
+                    <i class="bi bi-gear"></i> Django Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

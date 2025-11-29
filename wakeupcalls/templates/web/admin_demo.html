@@ -1,0 +1,217 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Demo Data Management - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .demo-stat {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .demo-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .demo-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    .admin-nav {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .admin-nav a {
+        margin-right: 15px;
+        text-decoration: none;
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .admin-nav a:hover {
+        background: #5a67d8;
+        color: white;
+    }
+    .admin-nav a.active {
+        background: #4c51bf;
+    }
+    .action-card {
+        border: 2px dashed #ddd;
+        padding: 30px;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .action-card:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🧪 Demo Data Management</h1>
+        <span class="badge badge-info">Testing Environment</span>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="{% url 'web:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="{% url 'web:admin_users' %}"><i class="bi bi-people"></i> Users</a>
+        <a href="{% url 'web:admin_logs' %}"><i class="bi bi-file-text"></i> Logs</a>
+        <a href="{% url 'web:admin_demo' %}" class="active"><i class="bi bi-database"></i> Demo Data</a>
+        <a href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Django Admin</a>
+    </div>
+
+    <!-- Current Demo Data Stats -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="demo-stat">
+                <div class="demo-number">{{ demo_stats.demo_users }}</div>
+                <div class="demo-label">Demo Users</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="demo-stat">
+                <div class="demo-number">{{ demo_stats.demo_calls }}</div>
+                <div class="demo-label">Demo Calls</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="demo-stat">
+                <div class="demo-number">{{ demo_stats.demo_executions }}</div>
+                <div class="demo-label">Demo Executions</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="demo-stat">
+                <div class="demo-number">{{ demo_stats.demo_notifications }}</div>
+                <div class="demo-label">Demo Notifications</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Data Actions -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="action-card">
+                <h4><i class="bi bi-plus-circle text-success"></i> Seed Demo Data</h4>
+                <p class="text-muted">
+                    Create comprehensive demo data including:<br>
+                    • 5 Demo users with verified phone numbers<br>
+                    • 15+ Wake-up calls with various configurations<br>
+                    • 30+ Execution records with realistic outcomes<br>
+                    • Notification logs (all suppressed from actual delivery)<br>
+                    • Phone verification records
+                </p>
+                <form method="post" onsubmit="return confirm('This will create new demo data. Continue?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="seed_demo_data">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-database-add"></i> Seed Demo Data
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="action-card">
+                <h4><i class="bi bi-trash text-danger"></i> Clear Demo Data</h4>
+                <p class="text-muted">
+                    Remove all demo data including:<br>
+                    • All users with 'demo' in email<br>
+                    • All wake-up calls marked as demo<br>
+                    • All related execution records<br>
+                    • All demo notification logs<br>
+                    • Associated phone verifications
+                </p>
+                <form method="post" onsubmit="return confirm('⚠️ This will permanently delete all demo data. Are you sure?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="clear_demo_data">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="bi bi-database-x"></i> Clear Demo Data
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Data Information -->
+    <div class="admin-card">
+        <h5><i class="bi bi-info-circle"></i> About Demo Data</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <h6>🎯 Purpose</h6>
+                <ul>
+                    <li><strong>Testing:</strong> Safely test wake-up call functionality</li>
+                    <li><strong>Development:</strong> Realistic data for development and debugging</li>
+                    <li><strong>Demonstration:</strong> Show system capabilities to stakeholders</li>
+                    <li><strong>Training:</strong> Allow users to explore features safely</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>🛡️ Safety Features</h6>
+                <ul>
+                    <li><strong>No Real Calls:</strong> Demo calls/SMS are logged but not sent</li>
+                    <li><strong>Marked Data:</strong> All demo data is clearly flagged</li>
+                    <li><strong>Easy Cleanup:</strong> Remove all demo data with one click</li>
+                    <li><strong>Isolated:</strong> Demo data doesn't affect real user operations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo User Credentials -->
+    {% if demo_stats.demo_users > 0 %}
+    <div class="admin-card">
+        <h5><i class="bi bi-key"></i> Demo User Credentials</h5>
+        <div class="alert alert-info">
+            <strong>Demo Users:</strong> demo.user.1@example.com through demo.user.{{ demo_stats.demo_users }}@example.com<br>
+            <strong>Password:</strong> demo123456<br>
+            <strong>Admin User:</strong> admin@Vamshi.com (password: admin123456)
+        </div>
+        <p class="text-muted">
+            These credentials can be used to log in and test the system functionality. 
+            All demo wake-up calls are configured to not send actual notifications.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Management Commands -->
+    <div class="admin-card">
+        <h5><i class="bi bi-terminal"></i> Management Commands</h5>
+        <p>You can also manage demo data using Django management commands:</p>
+        <div class="bg-dark text-light p-3 rounded">
+            <code>
+                # Seed demo data<br>
+                python manage.py seed_demo_data --users 5 --calls-per-user 3 --executions 30<br><br>
+                
+                # Clear existing demo data first<br>
+                python manage.py seed_demo_data --clear-existing --users 10 --executions 50<br><br>
+                
+                # Custom configuration<br>
+                python manage.py seed_demo_data --users 8 --calls-per-user 4 --executions 40
+            </code>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Create Wake-up Call - Vamshi Wake-up Calls{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-plus-circle"></i> Create New Wake-up Call</h4>
+                <p class="text-muted mb-0">Set up a personalized wake-up call with weather updates</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Wake-up Call Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       placeholder="e.g., Morning Workout, Work Day" required>
+                                <div class="form-text">Give your wake-up call a memorable name.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone_number" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                       value="{{ user.phone_number }}" placeholder="+1234567890" required>
+                                <div class="form-text">Include country code (e.g., +1 for US).</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Method -->
+                    <div class="mb-3">
+                        <label class="form-label">Contact Method <span class="text-danger">*</span></label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="contact_method" 
+                                           id="contact_call" value="call" checked>
+                                    <label class="form-check-label" for="contact_call">
+                                        <i class="bi bi-telephone text-primary"></i> <strong>Voice Call</strong>
+                                        <small class="d-block text-muted">Interactive call with voice commands</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="contact_method" 
+                                           id="contact_sms" value="sms">
+                                    <label class="form-check-label" for="contact_sms">
+                                        <i class="bi bi-chat-text text-success"></i> <strong>SMS Message</strong>
+                                        <small class="d-block text-muted">Text message with wake-up info</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Scheduling -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="scheduled_time" class="form-label">Wake-up Time <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" id="scheduled_time" name="scheduled_time" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="frequency" class="form-label">Frequency <span class="text-danger">*</span></label>
+                                <select class="form-select" id="frequency" name="frequency" required>
+                                    <option value="once">Once (one-time)</option>
+                                    <option value="daily" selected>Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="weekdays">Weekdays Only</option>
+                                    <option value="weekends">Weekends Only</option>
+                                    <option value="custom">Custom Days</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Days (Hidden by default) -->
+                    <div id="custom-days" class="mb-3" style="display: none;">
+                        <label class="form-label">Select Days</label>
+                        <div class="row">
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="monday" name="monday">
+                                    <label class="form-check-label" for="monday">Monday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="tuesday" name="tuesday">
+                                    <label class="form-check-label" for="tuesday">Tuesday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="wednesday" name="wednesday">
+                                    <label class="form-check-label" for="wednesday">Wednesday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="thursday" name="thursday">
+                                    <label class="form-check-label" for="thursday">Thursday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="friday" name="friday">
+                                    <label class="form-check-label" for="friday">Friday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="saturday" name="saturday">
+                                    <label class="form-check-label" for="saturday">Saturday</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="sunday" name="sunday">
+                                    <label class="form-check-label" for="sunday">Sunday</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Weather Settings -->
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="include_weather" 
+                                   name="include_weather" checked>
+                            <label class="form-check-label" for="include_weather">
+                                <i class="bi bi-cloud-sun text-info"></i> Include Weather Updates
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            Get current weather conditions and temperature with your wake-up call.
+                            {% if user.zip_code %}
+                                Using ZIP code: {{ user.zip_code }}
+                            {% else %}
+                                <span class="text-warning">Add ZIP code to your profile for weather updates.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Message -->
+                    <div class="mb-3">
+                        <label for="custom_message" class="form-label">Custom Message (Optional)</label>
+                        <textarea class="form-control" id="custom_message" name="custom_message" 
+                                  rows="3" placeholder="Add a personal message to your wake-up call..."></textarea>
+                        <div class="form-text">
+                            This message will be included in your wake-up call after the weather update.
+                        </div>
+                    </div>
+                    
+                    <!-- Real Mode Notice -->
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle"></i>
+                        <strong>Real Mode:</strong> This wake-up call will make actual calls or send real SMS messages to your phone number.
+                        Make sure your phone number is verified before creating wake-up calls.
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'web:wakeup_calls' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Create Wake-up Call
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Help Information -->
+        <div class="card mt-3 bg-light">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-lightbulb"></i> Tips for Better Wake-up Calls</h6>
+                <ul class="mb-0 small">
+                    <li><strong>Voice Calls:</strong> You can respond with voice commands like "snooze" or "cancel"</li>
+                    <li><strong>DTMF Commands:</strong> Press 1 to snooze, 2 to cancel future calls</li>
+                    <li><strong>Weather Updates:</strong> Make sure your ZIP code is set in your profile</li>
+                    <li><strong>Custom Messages:</strong> Keep them short and motivational</li>
+                    <li><strong>Phone Verification:</strong> Your phone number must be verified to receive calls</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show/hide custom days based on frequency selection
+document.getElementById('frequency').addEventListener('change', function() {
+    const customDays = document.getElementById('custom-days');
+    if (this.value === 'custom') {
+        customDays.style.display = 'block';
+    } else {
+        customDays.style.display = 'none';
+    }
+});
+
+// Set default time to 7:00 AM
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('scheduled_time');
+    if (!timeInput.value) {
+        timeInput.value = '07:00';
+    }
+});
+</script>
+{% endblock %}
