@@ -1,0 +1,89 @@
+[
+    {
+        "id": "ecs-svc/7573279804688057764",
+        "status": "PRIMARY",
+        "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:16",
+        "desiredCount": 0,
+        "pendingCount": 0,
+        "runningCount": 0,
+        "failedTasks": 0,
+        "createdAt": "2025-12-01T01:58:16.924000+05:30",
+        "updatedAt": "2025-12-01T01:58:27.584000+05:30",
+        "launchType": "FARGATE",
+        "platformVersion": "1.4.0",
+        "platformFamily": "Linux",
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-06e3fdb4e69e4a69b",
+                    "subnet-0d2b7ff228b5c60dc",
+                    "subnet-0dda99de9cad44726"
+                ],
+                "securityGroups": [
+                    "sg-05a386104cfc7edc3"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "rolloutState": "IN_PROGRESS",
+        "rolloutStateReason": "ECS deployment ecs-svc/7573279804688057764 in progress."
+    },
+    {
+        "id": "ecs-svc/7241101300160392519",
+        "status": "ACTIVE",
+        "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:15",
+        "desiredCount": 1,
+        "pendingCount": 0,
+        "runningCount": 0,
+        "failedTasks": 1,
+        "createdAt": "2025-12-01T01:48:30.619000+05:30",
+        "updatedAt": "2025-12-01T01:58:16.925000+05:30",
+        "launchType": "FARGATE",
+        "platformVersion": "1.4.0",
+        "platformFamily": "Linux",
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-06e3fdb4e69e4a69b",
+                    "subnet-0d2b7ff228b5c60dc",
+                    "subnet-0dda99de9cad44726"
+                ],
+                "securityGroups": [
+                    "sg-05a386104cfc7edc3"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "rolloutState": "IN_PROGRESS",
+        "rolloutStateReason": "ECS deployment ecs-svc/7241101300160392519 in progress."
+    },
+    {
+        "id": "ecs-svc/9141095733315666521",
+        "status": "ACTIVE",
+        "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:14",
+        "desiredCount": 0,
+        "pendingCount": 0,
+        "runningCount": 1,
+        "failedTasks": 0,
+        "createdAt": "2025-12-01T01:38:47.199000+05:30",
+        "updatedAt": "2025-12-01T01:49:44.471000+05:30",
+        "launchType": "FARGATE",
+        "platformVersion": "1.4.0",
+        "platformFamily": "Linux",
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-06e3fdb4e69e4a69b",
+                    "subnet-0d2b7ff228b5c60dc",
+                    "subnet-0dda99de9cad44726"
+                ],
+                "securityGroups": [
+                    "sg-05a386104cfc7edc3"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "rolloutState": "COMPLETED",
+        "rolloutStateReason": "ECS deployment ecs-svc/9141095733315666521 completed."
+    }
+]

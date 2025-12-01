@@ -1,0 +1,843 @@
+{
+    "events": [
+        {
+            "timestamp": 1764524116150,
+            "message": "[2025-11-30 17:35:16,149: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524119135
+        },
+        {
+            "timestamp": 1764524176250,
+            "message": "[2025-11-30 17:36:16,250: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524179134
+        },
+        {
+            "timestamp": 1764524236361,
+            "message": "[2025-11-30 17:37:16,361: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524239132
+        },
+        {
+            "timestamp": 1764524296459,
+            "message": "[2025-11-30 17:38:16,459: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524299130
+        },
+        {
+            "timestamp": 1764524356558,
+            "message": "[2025-11-30 17:39:16,558: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524359133
+        },
+        {
+            "timestamp": 1764524416654,
+            "message": "[2025-11-30 17:40:16,654: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524419129
+        },
+        {
+            "timestamp": 1764524476757,
+            "message": "[2025-11-30 17:41:16,757: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524479129
+        },
+        {
+            "timestamp": 1764524536852,
+            "message": "[2025-11-30 17:42:16,851: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524539130
+        },
+        {
+            "timestamp": 1764524596959,
+            "message": "[2025-11-30 17:43:16,959: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524599129
+        },
+        {
+            "timestamp": 1764524657077,
+            "message": "[2025-11-30 17:44:17,076: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524659132
+        },
+        {
+            "timestamp": 1764524717178,
+            "message": "[2025-11-30 17:45:17,178: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524719132
+        },
+        {
+            "timestamp": 1764524777281,
+            "message": "[2025-11-30 17:46:17,281: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524779132
+        },
+        {
+            "timestamp": 1764524837390,
+            "message": "[2025-11-30 17:47:17,389: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524839132
+        },
+        {
+            "timestamp": 1764524897488,
+            "message": "[2025-11-30 17:48:17,488: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524899129
+        },
+        {
+            "timestamp": 1764524957582,
+            "message": "[2025-11-30 17:49:17,582: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764524959132
+        },
+        {
+            "timestamp": 1764525017692,
+            "message": "[2025-11-30 17:50:17,692: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525019128
+        },
+        {
+            "timestamp": 1764525077809,
+            "message": "[2025-11-30 17:51:17,808: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525079135
+        },
+        {
+            "timestamp": 1764525137921,
+            "message": "[2025-11-30 17:52:17,921: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525139129
+        },
+        {
+            "timestamp": 1764525198015,
+            "message": "[2025-11-30 17:53:18,015: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525199132
+        },
+        {
+            "timestamp": 1764525258112,
+            "message": "[2025-11-30 17:54:18,112: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525259129
+        },
+        {
+            "timestamp": 1764525318220,
+            "message": "[2025-11-30 17:55:18,220: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525319134
+        },
+        {
+            "timestamp": 1764525378314,
+            "message": "[2025-11-30 17:56:18,314: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525379133
+        },
+        {
+            "timestamp": 1764525438419,
+            "message": "[2025-11-30 17:57:18,419: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525439132
+        },
+        {
+            "timestamp": 1764525498526,
+            "message": "[2025-11-30 17:58:18,525: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525499133
+        },
+        {
+            "timestamp": 1764525558624,
+            "message": "[2025-11-30 17:59:18,624: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525559127
+        },
+        {
+            "timestamp": 1764525618717,
+            "message": "[2025-11-30 18:00:18,717: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525619133
+        },
+        {
+            "timestamp": 1764525678819,
+            "message": "[2025-11-30 18:01:18,819: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525679134
+        },
+        {
+            "timestamp": 1764525738932,
+            "message": "[2025-11-30 18:02:18,932: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525739132
+        },
+        {
+            "timestamp": 1764525799041,
+            "message": "[2025-11-30 18:03:19,041: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525799129
+        },
+        {
+            "timestamp": 1764525859155,
+            "message": "[2025-11-30 18:04:19,155: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525864132
+        },
+        {
+            "timestamp": 1764525919259,
+            "message": "[2025-11-30 18:05:19,259: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525924128
+        },
+        {
+            "timestamp": 1764525979359,
+            "message": "[2025-11-30 18:06:19,359: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764525984130
+        },
+        {
+            "timestamp": 1764526039463,
+            "message": "[2025-11-30 18:07:19,463: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526044130
+        },
+        {
+            "timestamp": 1764526099567,
+            "message": "[2025-11-30 18:08:19,567: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526104137
+        },
+        {
+            "timestamp": 1764526159685,
+            "message": "[2025-11-30 18:09:19,685: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526164134
+        },
+        {
+            "timestamp": 1764526219783,
+            "message": "[2025-11-30 18:10:19,782: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526224131
+        },
+        {
+            "timestamp": 1764526279886,
+            "message": "[2025-11-30 18:11:19,886: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526284131
+        },
+        {
+            "timestamp": 1764526339991,
+            "message": "[2025-11-30 18:12:19,991: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526344130
+        },
+        {
+            "timestamp": 1764526400084,
+            "message": "[2025-11-30 18:13:20,084: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526404131
+        },
+        {
+            "timestamp": 1764526460187,
+            "message": "[2025-11-30 18:14:20,186: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526464133
+        },
+        {
+            "timestamp": 1764526520292,
+            "message": "[2025-11-30 18:15:20,292: INFO/MainProcess] Scheduler: Sending due task process-scheduled-wakeup-calls (wakeup_calls.tasks.process_scheduled_wakeup_calls)",
+            "ingestionTime": 1764526524131
+        }
+    ],
+    "nextForwardToken": "f/39350256325081767165469612051082175510324153731928358912/s",
+    "nextBackwardToken": "b/39350202710923604079660228405655383572566149876918386688/s"
+}
+{
+    "service": {
+        "serviceArn": "arn:aws:ecs:us-east-2:611925743950:service/wakeupcalls-cluster/wakeupcalls-service",
+        "serviceName": "wakeupcalls-service",
+        "clusterArn": "arn:aws:ecs:us-east-2:611925743950:cluster/wakeupcalls-cluster",
+        "loadBalancers": [
+            {
+                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b",
+                "containerName": "wakeupcalls",
+                "containerPort": 8000
+            }
+        ],
+        "serviceRegistries": [],
+        "status": "ACTIVE",
+        "desiredCount": 1,
+        "runningCount": 2,
+        "pendingCount": 0,
+        "launchType": "FARGATE",
+        "platformVersion": "LATEST",
+        "platformFamily": "Linux",
+        "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:13",
+        "deploymentConfiguration": {
+            "deploymentCircuitBreaker": {
+                "enable": false,
+                "rollback": false
+            },
+            "maximumPercent": 200,
+            "minimumHealthyPercent": 100,
+            "strategy": "ROLLING",
+            "bakeTimeInMinutes": 0
+        },
+        "deployments": [
+            {
+                "id": "ecs-svc/9721919982644621859",
+                "status": "PRIMARY",
+                "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:13",
+                "desiredCount": 1,
+                "pendingCount": 0,
+                "runningCount": 1,
+                "failedTasks": 0,
+                "createdAt": "2025-12-01T01:28:30.112000+05:30",
+                "updatedAt": "2025-12-01T01:30:04.492000+05:30",
+                "launchType": "FARGATE",
+                "platformVersion": "1.4.0",
+                "platformFamily": "Linux",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "subnets": [
+                            "subnet-06e3fdb4e69e4a69b",
+                            "subnet-0d2b7ff228b5c60dc",
+                            "subnet-0dda99de9cad44726"
+                        ],
+                        "securityGroups": [
+                            "sg-05a386104cfc7edc3"
+                        ],
+                        "assignPublicIp": "ENABLED"
+                    }
+                },
+                "rolloutState": "IN_PROGRESS",
+                "rolloutStateReason": "ECS deployment ecs-svc/9721919982644621859 in progress."
+            },
+            {
+                "id": "ecs-svc/6232099065978538537",
+                "status": "ACTIVE",
+                "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:12",
+                "desiredCount": 0,
+                "pendingCount": 0,
+                "runningCount": 1,
+                "failedTasks": 0,
+                "createdAt": "2025-11-30T16:54:22.500000+05:30",
+                "updatedAt": "2025-12-01T01:29:42.318000+05:30",
+                "launchType": "FARGATE",
+                "platformVersion": "1.4.0",
+                "platformFamily": "Linux",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "subnets": [
+                            "subnet-06e3fdb4e69e4a69b",
+                            "subnet-0d2b7ff228b5c60dc",
+                            "subnet-0dda99de9cad44726"
+                        ],
+                        "securityGroups": [
+                            "sg-05a386104cfc7edc3"
+                        ],
+                        "assignPublicIp": "ENABLED"
+                    }
+                },
+                "rolloutState": "COMPLETED",
+                "rolloutStateReason": "ECS deployment ecs-svc/6232099065978538537 completed."
+            }
+        ],
+        "roleArn": "arn:aws:iam::611925743950:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+        "events": [
+            {
+                "id": "67f4aa32-cde2-4a6c-8e64-1bf0417f224d",
+                "createdAt": "2025-12-01T01:29:33.346000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "2331338a-5c6e-4f2e-8fd2-e04e2df4cdbd",
+                "createdAt": "2025-12-01T01:28:52.879000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 95a5371f8c5b4b14a7f5edc883d06b63)."
+            },
+            {
+                "id": "5e8c06ea-a5a0-41a5-b0f3-000855aef3df",
+                "createdAt": "2025-11-30T22:57:38.103000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "5f33585c-25c2-4d66-9c13-c711c5afd098",
+                "createdAt": "2025-11-30T16:57:26.262000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "2b098ff3-53cc-43ef-a298-db733dabb775",
+                "createdAt": "2025-11-30T16:57:26.261000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/6232099065978538537) deployment completed."
+            },
+            {
+                "id": "db650ef7-0da1-4a1d-9501-836b1f856aa1",
+                "createdAt": "2025-11-30T16:56:34.339000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/0481239215574001665) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "4600abb8-e1ab-4b62-abd1-8957695bae79",
+                "createdAt": "2025-11-30T16:56:34.316000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "71230d31-97f7-44c3-bcc7-2c49c8688a3c",
+                "createdAt": "2025-11-30T16:56:23.709000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 907bf393f0884bc8a4b421aabf9ceb58)."
+            },
+            {
+                "id": "ce5d155b-f9ef-4f52-845d-567895635946",
+                "createdAt": "2025-11-30T16:55:33.736000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "44ae7edc-64e1-4bb6-bba9-d8cd3048f848",
+                "createdAt": "2025-11-30T16:55:01.792000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task fbd22f05793b4a9aaf7ab28fc0a07e6e)."
+            },
+            {
+                "id": "8edf1ab8-ef79-47fe-a826-60d3224c9c88",
+                "createdAt": "2025-11-30T16:49:46.824000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "d7ec7e97-3bd2-4ec4-a7c1-f682dcc888e9",
+                "createdAt": "2025-11-30T16:49:46.762000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/1888551691305559967) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "aea99dab-a2cc-4d27-a1db-6448a234f22b",
+                "createdAt": "2025-11-30T16:49:46.757000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "43f277bb-0814-4692-b70b-5acc9accf5c2",
+                "createdAt": "2025-11-30T16:44:23.637000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "d829eee9-5591-477f-b0b0-1ef72e9b9a2e",
+                "createdAt": "2025-11-30T16:43:54.147000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 8bbaa759105341deb97aa70120bb46c5)."
+            },
+            {
+                "id": "1f7d4644-d397-4a08-a3bf-276ba067e674",
+                "createdAt": "2025-11-30T16:38:34.182000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "87136a76-4d34-4f60-94ee-9c4d1ee5d0c1",
+                "createdAt": "2025-11-30T16:38:34.128000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/1888551691305559967) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "1985a025-acda-411c-8fe2-5bbe443ac81e",
+                "createdAt": "2025-11-30T16:38:34.124000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "7c6a48e9-39bf-462a-a328-1c24f01156c6",
+                "createdAt": "2025-11-30T16:37:52.320000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "1dbc8dff-dd48-4ebc-ae7d-564a5ed7b7de",
+                "createdAt": "2025-11-30T16:37:14.494000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 0dffe6567f39467d840b11afb19c7da6)."
+            },
+            {
+                "id": "363039e2-ad76-4b59-9b22-b417649e85cd",
+                "createdAt": "2025-11-30T16:36:44.778000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/1888551691305559967) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "e9d6dd68-341f-4050-bf3d-eb8f9becf804",
+                "createdAt": "2025-11-30T16:36:44.773000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "92103c2e-02af-445d-a09e-d35a64f4773d",
+                "createdAt": "2025-11-30T16:35:31.977000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 4fa02c9f5b13468a9fa9ac5114c6a7c5)."
+            },
+            {
+                "id": "5f7b87b9-7102-4e26-b3ea-7d936466dd47",
+                "createdAt": "2025-11-30T16:35:11.796000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/3657215524313814287) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "264bdd32-06c2-422d-909a-30b293f036a7",
+                "createdAt": "2025-11-30T16:35:11.792000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "f9bda8ff-4ddb-4a8f-bd4b-de9fe57e6ce4",
+                "createdAt": "2025-11-30T16:34:08.780000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task b60f7764aa044119bd8629d795086878)."
+            },
+            {
+                "id": "9075a52f-1c3b-459e-b8fa-d63321f4dbae",
+                "createdAt": "2025-11-30T16:33:49.235000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/3657215524313814287) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "25154c47-9931-42f4-aa4c-79ea5759a922",
+                "createdAt": "2025-11-30T16:33:49.214000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "d368190f-a7c0-4603-b66d-88965d3b4008",
+                "createdAt": "2025-11-30T16:32:37.829000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 5f861b6d14b84aaf869f69225e56f619)."
+            },
+            {
+                "id": "54981229-af0f-462b-9c98-83e0eeda1c14",
+                "createdAt": "2025-11-30T12:39:12.410000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "66d6278e-037e-40cc-9b42-1516ddc288e5",
+                "createdAt": "2025-11-30T12:39:12.409000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/0481239215574001665) deployment completed."
+            },
+            {
+                "id": "5fecea16-72b0-48fb-8491-6fadf8cedbea",
+                "createdAt": "2025-11-30T12:38:10.445000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/4655993123814902640) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "f471fe93-dac2-4ed3-a8ee-e998c04cf5c6",
+                "createdAt": "2025-11-30T12:38:10.441000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "60ae1c23-1d80-40a7-a061-ec1c7a3f0b6e",
+                "createdAt": "2025-11-30T12:38:00.452000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 667a06168d634bd29832ae38377b12df)."
+            },
+            {
+                "id": "0eeaf9f9-1ff4-40a4-bbf5-5a6171c4beab",
+                "createdAt": "2025-11-30T12:37:10.187000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "f93eb093-4e4c-41f8-b27f-2897149cd3fb",
+                "createdAt": "2025-11-30T12:36:29.567000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 907bf393f0884bc8a4b421aabf9ceb58)."
+            },
+            {
+                "id": "e269db4c-d920-4b09-9b59-855acdb49b40",
+                "createdAt": "2025-11-30T12:35:27.237000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/0426597086654545585) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "4fd83ee0-e8e4-432a-bd0f-3e00ac9ecbb5",
+                "createdAt": "2025-11-30T12:35:27.231000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "012a623f-15da-4980-bc4c-7d98e0aef8ed",
+                "createdAt": "2025-11-30T12:35:25.582000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 4f9589e4ff4b43c48d998864b467be9d)."
+            },
+            {
+                "id": "8c5374fc-5406-4f93-889f-fa023c86becc",
+                "createdAt": "2025-11-30T12:34:36.302000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "8d68c606-122a-4466-b83c-6f2b28107c0e",
+                "createdAt": "2025-11-30T12:34:04.658000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 4f9589e4ff4b43c48d998864b467be9d)."
+            },
+            {
+                "id": "986987bb-37bd-419e-b6bb-0aec511ca464",
+                "createdAt": "2025-11-30T06:49:23.402000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "38d1da20-83fe-424c-8b0a-b82e855ab7a6",
+                "createdAt": "2025-11-30T06:49:23.401000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/4655993123814902640) deployment completed."
+            },
+            {
+                "id": "cf243770-e3fb-4c13-9c90-ef183c7f2fa9",
+                "createdAt": "2025-11-30T06:48:21.842000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/5951712499163074441) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "8af08734-4430-4739-9c53-a48dbd45d376",
+                "createdAt": "2025-11-30T06:48:12.699000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "43aeb66e-a7d6-46d1-b9fe-c2e35c0fd2a2",
+                "createdAt": "2025-11-30T06:48:11.367000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 7f67f0f46dd54cb0b0cfbfb30a86ddf1)."
+            },
+            {
+                "id": "92a143aa-271c-4068-b2ff-051c84c10449",
+                "createdAt": "2025-11-30T06:48:11.322000+05:30",
+                "message": "(service wakeupcalls-service) (task 7f67f0f46dd54cb0b0cfbfb30a86ddf1) (port 8000) is unhealthy in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b) due to (reason Health checks failed with these codes: [400])."
+            },
+            {
+                "id": "e80bfe6d-ae26-4c04-a28c-0eac0237a6db",
+                "createdAt": "2025-11-30T06:46:29.486000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/3382617959982786337) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "bae5c087-5c62-4560-9c79-9054be82a50f",
+                "createdAt": "2025-11-30T06:46:29.483000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "d42e6145-2ead-47c3-bf5f-607e7d87d671",
+                "createdAt": "2025-11-30T06:46:18.699000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 820c49a6f6094d43a9f84a5eecf3cfd0)."
+            },
+            {
+                "id": "3f0e60de-49c1-4d5a-b875-fb5398796ce1",
+                "createdAt": "2025-11-30T06:45:27.950000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "095b20fd-5c71-41fe-86bf-2fd52ec023a1",
+                "createdAt": "2025-11-30T06:44:48.201000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 667a06168d634bd29832ae38377b12df)."
+            },
+            {
+                "id": "83279165-6b42-42b6-8e69-a63212524fc3",
+                "createdAt": "2025-11-30T06:44:47.514000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 7f67f0f46dd54cb0b0cfbfb30a86ddf1)."
+            },
+            {
+                "id": "920b5b1a-94f5-4fa2-9d04-fc9120a81e73",
+                "createdAt": "2025-11-30T06:38:58.167000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "cf9c8030-5e54-427f-824c-1eac697f1797",
+                "createdAt": "2025-11-30T06:38:58.106000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/5951712499163074441) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "799ee682-974e-4c3b-83f8-98c8eac3357b",
+                "createdAt": "2025-11-30T06:38:58.102000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "34553b36-5057-4cfc-96a8-a79331a3e7bf",
+                "createdAt": "2025-11-30T06:38:56.829000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 95967a4e64354288b7565a5a8678108d)."
+            },
+            {
+                "id": "7ce888e3-a5fa-49aa-a796-77aa98488b27",
+                "createdAt": "2025-11-30T06:38:56.761000+05:30",
+                "message": "(service wakeupcalls-service) (task 95967a4e64354288b7565a5a8678108d) (port 8000) is unhealthy in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b) due to (reason Health checks failed with these codes: [400])."
+            },
+            {
+                "id": "146b5ec4-e3c3-4e07-9709-68b31d6218ce",
+                "createdAt": "2025-11-30T06:32:38.146000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "c517c1bc-6930-420f-93f6-213314019107",
+                "createdAt": "2025-11-30T06:32:07.903000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 95967a4e64354288b7565a5a8678108d)."
+            },
+            {
+                "id": "aad9f015-e0f0-4f91-8321-f2aa1c9579dc",
+                "createdAt": "2025-11-30T06:31:15.772000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/3362271165180666531) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "fe4734a0-d24e-4420-9740-73a39d8ab0b3",
+                "createdAt": "2025-11-30T06:31:15.767000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "3e29a1a7-2a5e-4909-a45f-27a7b8561a3f",
+                "createdAt": "2025-11-30T06:31:05.065000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 77aee67df6df4d4397317a1c112e5272)."
+            },
+            {
+                "id": "f1a0211c-492c-4783-8698-2a8ba591d0d6",
+                "createdAt": "2025-11-30T06:09:31.071000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "4380d86c-24f3-4b76-b0cb-93ab4d847207",
+                "createdAt": "2025-11-30T06:08:59.646000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 77aee67df6df4d4397317a1c112e5272)."
+            },
+            {
+                "id": "4cd077a0-0107-4d20-ba22-5e4099a0a044",
+                "createdAt": "2025-11-30T06:02:29.276000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "19d0382d-1beb-4ee7-b80d-6d493f2b2385",
+                "createdAt": "2025-11-30T06:02:29.275000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/3382617959982786337) deployment completed."
+            },
+            {
+                "id": "bc2f093d-2ed3-487f-8e04-87edf80e72b3",
+                "createdAt": "2025-11-30T06:01:18.068000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task d204434e91274ff9a83e90fbbec2bd9b)."
+            },
+            {
+                "id": "0145955a-c856-4794-a1a9-7b90faf3a120",
+                "createdAt": "2025-11-30T06:00:26.689000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "0be061b7-9ec6-4e32-9557-5a1abfed5b30",
+                "createdAt": "2025-11-30T05:59:44.757000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 820c49a6f6094d43a9f84a5eecf3cfd0)."
+            },
+            {
+                "id": "601c0b06-89b3-49a1-96ad-92888dae2b2a",
+                "createdAt": "2025-11-30T05:58:53.236000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/9359358753003145197) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "32349be2-574c-42c6-a6e1-85592a317661",
+                "createdAt": "2025-11-30T05:58:53.235000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/4844753841271759782) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "3a5fe59d-3682-4fe1-b1c5-322932f3005b",
+                "createdAt": "2025-11-30T05:58:53.169000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "f862d991-a3b0-41c5-9f83-37bace414315",
+                "createdAt": "2025-11-30T05:58:33.778000+05:30",
+                "message": "(service wakeupcalls-service) stopped 2 pending tasks."
+            },
+            {
+                "id": "8a76c0a1-d59e-4d8f-93fc-e72baaa619b9",
+                "createdAt": "2025-11-30T05:58:33.457000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "5dc240d2-f5f1-46f3-ab2b-200cbf2fd866",
+                "createdAt": "2025-11-30T05:58:03.726000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 7459ec2c90014fc5a007c7114da5f231)."
+            },
+            {
+                "id": "6b5e51c8-af7c-4fe7-aec1-a80087830cae",
+                "createdAt": "2025-11-30T05:58:02.999000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task f55e3c276f1d4a84a8dfd57f3026ac70)."
+            },
+            {
+                "id": "7e15c078-1344-47b0-98f5-de8137fa260f",
+                "createdAt": "2025-11-30T05:52:03.217000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "5759fc60-3a5f-4635-961f-b6b091336914",
+                "createdAt": "2025-11-30T05:52:03.154000+05:30",
+                "message": "(service wakeupcalls-service, taskSet ecs-svc/9359358753003145197) has begun draining connections on 1 tasks."
+            },
+            {
+                "id": "c4e581e0-44bb-486a-841a-cfd33bed115e",
+                "createdAt": "2025-11-30T05:52:03.149000+05:30",
+                "message": "(service wakeupcalls-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "93b41dad-bf93-42a1-8627-d7a8d21f76d4",
+                "createdAt": "2025-11-30T05:51:52.933000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task b98edfd0bf20493ba985af7c27590178)."
+            },
+            {
+                "id": "2c61fd50-bcb9-4a13-bc50-dbe1f805f24a",
+                "createdAt": "2025-11-30T05:51:52.890000+05:30",
+                "message": "(service wakeupcalls-service) (task b98edfd0bf20493ba985af7c27590178) (port 8000) is unhealthy in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b) due to (reason Health checks failed with these codes: [400])."
+            },
+            {
+                "id": "bf6da4db-a988-41d3-b674-4d17f455fdcc",
+                "createdAt": "2025-11-30T05:43:49.956000+05:30",
+                "message": "(service wakeupcalls-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-2:611925743950:targetgroup/wakeupcalls-tg/fc1577c67c569e2b)"
+            },
+            {
+                "id": "c0978750-5c28-4c0a-a0e4-4a37fb52a39a",
+                "createdAt": "2025-11-30T05:43:18.527000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task b98edfd0bf20493ba985af7c27590178)."
+            },
+            {
+                "id": "f64935cd-e91f-499b-9b08-b1bfb620d3f4",
+                "createdAt": "2025-11-30T05:37:27.578000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "439837a5-4f44-47fa-873f-eb0897ec8b2f",
+                "createdAt": "2025-11-30T05:37:27.577000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/0342975600049824593) deployment completed."
+            },
+            {
+                "id": "21fa1fed-7e70-4bda-82be-1c90f4bdc3d6",
+                "createdAt": "2025-11-30T05:36:07.845000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task a4ebf90f64ba4306ba4c5408f9e73136)."
+            },
+            {
+                "id": "eb37917b-c018-43c0-b1b6-3beaa8d74921",
+                "createdAt": "2025-11-30T05:34:56.217000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task d204434e91274ff9a83e90fbbec2bd9b)."
+            },
+            {
+                "id": "15b4fc42-1035-407c-a8a3-22d790930a68",
+                "createdAt": "2025-11-30T05:32:19.323000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "5b340836-603d-4805-9c30-3af41e1a5e42",
+                "createdAt": "2025-11-30T05:32:19.322000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/3221355993845071364) deployment completed."
+            },
+            {
+                "id": "19fccc87-d4cf-48a2-a267-8108d66794b0",
+                "createdAt": "2025-11-30T05:30:59.737000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task d3962a0edc0545eb89a134ffd03922de)."
+            },
+            {
+                "id": "9eb32853-7b4a-484f-8f59-528c7adc2359",
+                "createdAt": "2025-11-30T05:29:47.904000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task a4ebf90f64ba4306ba4c5408f9e73136)."
+            },
+            {
+                "id": "a468b80b-370e-4bb6-9822-34c560aa320f",
+                "createdAt": "2025-11-30T05:14:00.022000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "04ed873f-75d0-473b-af2b-0a0e919a993b",
+                "createdAt": "2025-11-30T05:14:00.021000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/9242796357053648015) deployment completed."
+            },
+            {
+                "id": "74f4653c-db40-4048-a1f2-bf0413566636",
+                "createdAt": "2025-11-30T05:12:39.817000+05:30",
+                "message": "(service wakeupcalls-service) has stopped 1 running tasks: (task 82bb817fed744e1b8a1ef42477318dcd)."
+            },
+            {
+                "id": "c7225704-5242-4f7e-8508-b4510ece5a81",
+                "createdAt": "2025-11-30T05:11:27.997000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task d3962a0edc0545eb89a134ffd03922de)."
+            },
+            {
+                "id": "745e1be4-fb60-49bd-89b3-7f854ba91830",
+                "createdAt": "2025-11-30T04:54:30.435000+05:30",
+                "message": "(service wakeupcalls-service) has reached a steady state."
+            },
+            {
+                "id": "19e85ab1-4dfb-4f83-be88-15d24fa3874e",
+                "createdAt": "2025-11-30T04:54:30.434000+05:30",
+                "message": "(service wakeupcalls-service) (deployment ecs-svc/7385437105910731337) deployment completed."
+            },
+            {
+                "id": "6842649e-2e16-4acf-9acf-e30283acfb6a",
+                "createdAt": "2025-11-30T04:54:01.378000+05:30",
+                "message": "(service wakeupcalls-service) has started 1 tasks: (task 82bb817fed744e1b8a1ef42477318dcd)."
+            }
+        ],
+        "createdAt": "2025-11-30T04:53:34.754000+05:30",
+        "currentServiceRevisions": [
+            {
+                "arn": "arn:aws:ecs:us-east-2:611925743950:service-revision/wakeupcalls-cluster/wakeupcalls-service/9721919982644621859",
+                "requestedTaskCount": 1,
+                "runningTaskCount": 1,
+                "pendingTaskCount": 0
+            },
+            {
+                "arn": "arn:aws:ecs:us-east-2:611925743950:service-revision/wakeupcalls-cluster/wakeupcalls-service/6232099065978538537",
+                "requestedTaskCount": 0,
+                "runningTaskCount": 1,
+                "pendingTaskCount": 0
+            }
+        ],
+        "placementConstraints": [],
+        "placementStrategy": [],
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-06e3fdb4e69e4a69b",
+                    "subnet-0d2b7ff228b5c60dc",
+                    "subnet-0dda99de9cad44726"
+                ],
+                "securityGroups": [
+                    "sg-05a386104cfc7edc3"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "healthCheckGracePeriodSeconds": 0,
+        "schedulingStrategy": "REPLICA",
+        "deploymentController": {
+            "type": "ECS"
+        },
+        "createdBy": "arn:aws:iam::611925743950:user/fargate-deployer",
+        "enableECSManagedTags": false,
+        "propagateTags": "NONE",
+        "enableExecuteCommand": false,
+        "availabilityZoneRebalancing": "ENABLED",
+        "resourceManagementType": "CUSTOMER"
+    }
+}

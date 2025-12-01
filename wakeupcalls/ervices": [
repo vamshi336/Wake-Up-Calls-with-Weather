@@ -1,0 +1,105 @@
+{
+    "services": [
+        {
+            "serviceArn": "arn:aws:ecs:us-east-2:611925743950:service/wakeupcalls-cluster/wakeupcalls-service",
+            "serviceName": "wakeupcalls-service",
+            "clusterArn": "arn:aws:ecs:us-east-2:611925743950:cluster/wakeupcalls-cluster",
+            "loadBalancers": [],
+            "serviceRegistries": [],
+            "status": "ACTIVE",
+            "desiredCount": 1,
+            "runningCount": 0,
+            "pendingCount": 1,
+            "launchType": "FARGATE",
+            "platformVersion": "LATEST",
+            "platformFamily": "Linux",
+            "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:1",
+            "deploymentConfiguration": {
+                "deploymentCircuitBreaker": {
+                    "enable": false,
+                    "rollback": false
+                },
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100,
+                "strategy": "ROLLING",
+                "bakeTimeInMinutes": 0
+            },
+            "deployments": [
+                {
+                    "id": "ecs-svc/7385437105910731337",
+                    "status": "PRIMARY",
+                    "taskDefinition": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:1",
+                    "desiredCount": 1,
+                    "pendingCount": 1,
+                    "runningCount": 0,
+                    "failedTasks": 0,
+                    "createdAt": "2025-11-30T04:53:34.754000+05:30",
+                    "updatedAt": "2025-11-30T04:54:00.746000+05:30",
+                    "launchType": "FARGATE",
+                    "platformVersion": "1.4.0",
+                    "platformFamily": "Linux",
+                    "networkConfiguration": {
+                        "awsvpcConfiguration": {
+                            "subnets": [
+                                "subnet-06e3fdb4e69e4a69b",
+                                "subnet-0d2b7ff228b5c60dc",
+                                "subnet-0dda99de9cad44726"
+                            ],
+                            "securityGroups": [
+                                "sg-05a386104cfc7edc3"
+                            ],
+                            "assignPublicIp": "ENABLED"
+                        }
+                    },
+                    "rolloutState": "IN_PROGRESS",
+                    "rolloutStateReason": "ECS deployment ecs-svc/7385437105910731337 in progress."
+                }
+            ],
+            "roleArn": "arn:aws:iam::611925743950:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+            "events": [
+                {
+                    "id": "6842649e-2e16-4acf-9acf-e30283acfb6a",
+                    "createdAt": "2025-11-30T04:54:01.378000+05:30",
+                    "message": "(service wakeupcalls-service) has started 1 tasks: (task 82bb817fed744e1b8a1ef42477318dcd)."
+                }
+            ],
+            "createdAt": "2025-11-30T04:53:34.754000+05:30",
+            "currentServiceDeployment": "arn:aws:ecs:us-east-2:611925743950:service-deployment/wakeupcalls-cluster/wakeupcalls-service/cx9Dl8LvIk3Lah9hTZcJG",
+            "currentServiceRevisions": [
+                {
+                    "arn": "arn:aws:ecs:us-east-2:611925743950:service-revision/wakeupcalls-cluster/wakeupcalls-service/7385437105910731337",
+                    "requestedTaskCount": 1,
+                    "runningTaskCount": 0,
+                    "pendingTaskCount": 1
+                }
+            ],
+            "placementConstraints": [],
+            "placementStrategy": [],
+            "networkConfiguration": {
+                "awsvpcConfiguration": {
+                    "subnets": [
+                        "subnet-06e3fdb4e69e4a69b",
+                        "subnet-0d2b7ff228b5c60dc",
+                        "subnet-0dda99de9cad44726"
+                    ],
+                    "securityGroups": [
+                        "sg-05a386104cfc7edc3"
+                    ],
+                    "assignPublicIp": "ENABLED"
+                }
+            },
+            "healthCheckGracePeriodSeconds": 0,
+            "schedulingStrategy": "REPLICA",
+            "deploymentController": {
+                "type": "ECS"
+            },
+            "createdBy": "arn:aws:iam::611925743950:user/fargate-deployer",
+            "enableECSManagedTags": false,
+            "propagateTags": "NONE",
+            "enableExecuteCommand": false,
+            "availabilityZoneRebalancing": "ENABLED",
+            "resourceManagementType": "CUSTOMER"
+        }
+    ],
+    "failures": []
+}

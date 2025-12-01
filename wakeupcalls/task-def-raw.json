@@ -1,0 +1,224 @@
+{
+    "family": "wakeupcalls-task",
+    "executionRoleArn": "arn:aws:iam::611925743950:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "containerDefinitions": [
+        {
+            "name": "wakeupcalls",
+            "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+            "cpu": 256,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "command": [
+                "gunicorn"
+            ],
+            "environment": [
+                {
+                    "name": "SECRET_KEY",
+                    "value": "django-insecure-*z1msr4n)n-31rkjeiovcgbqk6j1y5j%z8-r(_#+bu6*f7jgsn"
+                },
+                {
+                    "name": "DEBUG",
+                    "value": "False"
+                },
+                {
+                    "name": "ALLOWED_HOSTS",
+                    "value": "84251037d092.ngrok-free.app,wakeupcalls-alb-2119154579.us-east-2.elb.amazonaws.com,localhost,127.0.0.1"
+                },
+                {
+                    "name": "DATABASE_URL",
+                    "value": "postgresql://neondb_owner:npg_0dIfEsxV5pgR@ep-super-bonus-ahkemh7n-pooler.c-3.us-east-1.aws.neon.tech/wakeupcalls?sslmode=require&channel_binding=require"
+                },
+                {
+                    "name": "TWILIO_ACCOUNT_SID",
+                    "value": "AC7577d469717d5e494106ebeae066ad66"
+                },
+                {
+                    "name": "TWILIO_AUTH_TOKEN",
+                    "value": "cf7e0a88d559bb6a1a540573e329614e"
+                },
+                {
+                    "name": "TWILIO_PHONE_NUMBER",
+                    "value": "+16593367171"
+                },
+                {
+                    "name": "WEATHER_API_KEY",
+                    "value": "49efc329e9d6409fad471128252911"
+                },
+                {
+                    "name": "REDIS_URL",
+                    "value": "redis://default:AaaNAAIncDJjODk5Y2VjMDM0YzM0NGQ3YWJmOTZhNGQ0ZmI1ODdiZXAyNDI2Mzc@saved-quagga-42637.upstash.io:6379"
+                },
+                {
+                    "name": "DEMO_MODE",
+                    "value": "False"
+                },
+                {
+                    "name": "BASE_URL",
+                    "value": "https://84251037d092.ngrok-free.app"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/wakeupcalls",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        },
+        {
+            "name": "celery_worker",
+            "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+            "cpu": 512,
+            "memory": 512,
+            "portMappings": [],
+            "essential": true,
+            "command": [
+                "celery_worker"
+            ],
+            "environment": [
+                {
+                    "name": "SECRET_KEY",
+                    "value": "django-insecure-*z1msr4n)n-31rkjeiovcgbqk6j1y5j%z8-r(_#+bu6*f7jgsn"
+                },
+                {
+                    "name": "DEBUG",
+                    "value": "False"
+                },
+                {
+                    "name": "ALLOWED_HOSTS",
+                    "value": "84251037d092.ngrok-free.app,wakeupcalls-alb-2119154579.us-east-2.elb.amazonaws.com,localhost,127.0.0.1"
+                },
+                {
+                    "name": "DATABASE_URL",
+                    "value": "postgresql://neondb_owner:npg_0dIfEsxV5pgR@ep-super-bonus-ahkemh7n-pooler.c-3.us-east-1.aws.neon.tech/wakeupcalls?sslmode=require&channel_binding=require"
+                },
+                {
+                    "name": "TWILIO_ACCOUNT_SID",
+                    "value": "AC7577d469717d5e494106ebeae066ad66"
+                },
+                {
+                    "name": "TWILIO_AUTH_TOKEN",
+                    "value": "cf7e0a88d559bb6a1a540573e329614e"
+                },
+                {
+                    "name": "TWILIO_PHONE_NUMBER",
+                    "value": "+16593367171"
+                },
+                {
+                    "name": "WEATHER_API_KEY",
+                    "value": "49efc329e9d6409fad471128252911"
+                },
+                {
+                    "name": "REDIS_URL",
+                    "value": "redis://default:AaaNAAIncDJjODk5Y2VjMDM0YzM0NGQ3YWJmOTZhNGQ0ZmI1ODdiZXAyNDI2Mzc@saved-quagga-42637.upstash.io:6379"
+                },
+                {
+                    "name": "DEMO_MODE",
+                    "value": "False"
+                },
+                {
+                    "name": "BASE_URL",
+                    "value": "https://84251037d092.ngrok-free.app"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/wakeupcalls",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        },
+        {
+            "name": "celery_beat",
+            "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+            "cpu": 256,
+            "memory": 256,
+            "portMappings": [],
+            "essential": true,
+            "command": [
+                "celery_beat"
+            ],
+            "environment": [
+                {
+                    "name": "SECRET_KEY",
+                    "value": "django-insecure-*z1msr4n)n-31rkjeiovcgbqk6j1y5j%z8-r(_#+bu6*f7jgsn"
+                },
+                {
+                    "name": "DEBUG",
+                    "value": "False"
+                },
+                {
+                    "name": "ALLOWED_HOSTS",
+                    "value": "84251037d092.ngrok-free.app,wakeupcalls-alb-2119154579.us-east-2.elb.amazonaws.com,localhost,127.0.0.1"
+                },
+                {
+                    "name": "DATABASE_URL",
+                    "value": "postgresql://neondb_owner:npg_0dIfEsxV5pgR@ep-super-bonus-ahkemh7n-pooler.c-3.us-east-1.aws.neon.tech/wakeupcalls?sslmode=require&channel_binding=require"
+                },
+                {
+                    "name": "TWILIO_ACCOUNT_SID",
+                    "value": "AC7577d469717d5e494106ebeae066ad66"
+                },
+                {
+                    "name": "TWILIO_AUTH_TOKEN",
+                    "value": "cf7e0a88d559bb6a1a540573e329614e"
+                },
+                {
+                    "name": "TWILIO_PHONE_NUMBER",
+                    "value": "+16593367171"
+                },
+                {
+                    "name": "WEATHER_API_KEY",
+                    "value": "49efc329e9d6409fad471128252911"
+                },
+                {
+                    "name": "REDIS_URL",
+                    "value": "redis://default:AaaNAAIncDJjODk5Y2VjMDM0YzM0NGQ3YWJmOTZhNGQ0ZmI1ODdiZXAyNDI2Mzc@saved-quagga-42637.upstash.io:6379"
+                },
+                {
+                    "name": "DEMO_MODE",
+                    "value": "False"
+                },
+                {
+                    "name": "BASE_URL",
+                    "value": "https://84251037d092.ngrok-free.app"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/wakeupcalls",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "volumes": [],
+    "placementConstraints": []
+}

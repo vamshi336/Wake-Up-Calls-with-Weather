@@ -1,0 +1,125 @@
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-2:611925743950:task-definition/wakeupcalls-task:12",
+        "containerDefinitions": [
+            {
+                "name": "wakeupcalls",
+                "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+                "cpu": 256,
+                "memory": 512,
+                "portMappings": [
+                    {
+                        "containerPort": 8000,
+                        "hostPort": 8000,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "command": [
+                    "gunicorn"
+                ],
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/wakeupcalls",
+                        "awslogs-region": "us-east-2",
+                        "awslogs-stream-prefix": "ecs"
+                    }
+                },
+                "systemControls": []
+            },
+            {
+                "name": "celery_worker",
+                "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+                "cpu": 512,
+                "memory": 512,
+                "portMappings": [],
+                "essential": true,
+                "command": [
+                    "celery_worker"
+                ],
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/wakeupcalls",
+                        "awslogs-region": "us-east-2",
+                        "awslogs-stream-prefix": "ecs"
+                    }
+                },
+                "systemControls": []
+            },
+            {
+                "name": "celery_beat",
+                "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+                "cpu": 256,
+                "memory": 256,
+                "portMappings": [],
+                "essential": true,
+                "command": [
+                    "celery_beat"
+                ],
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/wakeupcalls",
+                        "awslogs-region": "us-east-2",
+                        "awslogs-stream-prefix": "ecs"
+                    }
+                },
+                "systemControls": []
+            }
+        ],
+        "family": "wakeupcalls-task",
+        "executionRoleArn": "arn:aws:iam::611925743950:role/ecsTaskExecutionRole",
+        "networkMode": "awsvpc",
+        "revision": 12,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "MANAGED_INSTANCES",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "1024",
+        "memory": "2048",
+        "registeredAt": "2025-11-30T16:53:38.221000+05:30",
+        "registeredBy": "arn:aws:iam::611925743950:user/fargate-deployer"
+    },
+    "tags": []
+}

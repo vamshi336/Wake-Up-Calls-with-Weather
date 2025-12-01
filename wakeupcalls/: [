@@ -1,0 +1,145 @@
+{
+    "Subnets": [
+        {
+            "AvailabilityZoneId": "use2-az3",
+            "MapCustomerOwnedIpOnLaunch": false,
+            "OwnerId": "611925743950",
+            "AssignIpv6AddressOnCreation": false,
+            "Ipv6CidrBlockAssociationSet": [],
+            "SubnetArn": "arn:aws:ec2:us-east-2:611925743950:subnet/subnet-06e3fdb4e69e4a69b",
+            "EnableDns64": false,
+            "Ipv6Native": false,
+            "PrivateDnsNameOptionsOnLaunch": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "BlockPublicAccessStates": {
+                "InternetGatewayBlockMode": "off"
+            },
+            "SubnetId": "subnet-06e3fdb4e69e4a69b",
+            "State": "available",
+            "VpcId": "vpc-08049f0d6c356cca8",
+            "CidrBlock": "172.31.32.0/20",
+            "AvailableIpAddressCount": 4091,
+            "AvailabilityZone": "us-east-2c",
+            "DefaultForAz": true,
+            "MapPublicIpOnLaunch": true
+        },
+        {
+            "AvailabilityZoneId": "use2-az1",
+            "MapCustomerOwnedIpOnLaunch": false,
+            "OwnerId": "611925743950",
+            "AssignIpv6AddressOnCreation": false,
+            "Ipv6CidrBlockAssociationSet": [],
+            "SubnetArn": "arn:aws:ec2:us-east-2:611925743950:subnet/subnet-0d2b7ff228b5c60dc",
+            "EnableDns64": false,
+            "Ipv6Native": false,
+            "PrivateDnsNameOptionsOnLaunch": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "BlockPublicAccessStates": {
+                "InternetGatewayBlockMode": "off"
+            },
+            "SubnetId": "subnet-0d2b7ff228b5c60dc",
+            "State": "available",
+            "VpcId": "vpc-08049f0d6c356cca8",
+            "CidrBlock": "172.31.0.0/20",
+            "AvailableIpAddressCount": 4091,
+            "AvailabilityZone": "us-east-2a",
+            "DefaultForAz": true,
+            "MapPublicIpOnLaunch": true
+        },
+        {
+            "AvailabilityZoneId": "use2-az2",
+            "MapCustomerOwnedIpOnLaunch": false,
+            "OwnerId": "611925743950",
+            "AssignIpv6AddressOnCreation": false,
+            "Ipv6CidrBlockAssociationSet": [],
+            "SubnetArn": "arn:aws:ec2:us-east-2:611925743950:subnet/subnet-0dda99de9cad44726",
+            "EnableDns64": false,
+            "Ipv6Native": false,
+            "PrivateDnsNameOptionsOnLaunch": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "BlockPublicAccessStates": {
+                "InternetGatewayBlockMode": "off"
+            },
+            "SubnetId": "subnet-0dda99de9cad44726",
+            "State": "available",
+            "VpcId": "vpc-08049f0d6c356cca8",
+            "CidrBlock": "172.31.16.0/20",
+            "AvailableIpAddressCount": 4090,
+            "AvailabilityZone": "us-east-2b",
+            "DefaultForAz": true,
+            "MapPublicIpOnLaunch": true
+        }
+    ]
+}
+{
+    "NetworkInterfaces": [
+        {
+            "Association": {
+                "IpOwnerId": "amazon",
+                "PublicDnsName": "ec2-3-145-102-104.us-east-2.compute.amazonaws.com",
+                "PublicIp": "3.145.102.104"
+            },
+            "Attachment": {
+                "AttachTime": "2025-11-29T23:24:06+00:00",
+                "AttachmentId": "eni-attach-003f3621cc8466164",
+                "DeleteOnTermination": false,
+                "DeviceIndex": 1,
+                "NetworkCardIndex": 0,
+                "InstanceOwnerId": "599814071601",
+                "Status": "attached"
+            },
+            "AvailabilityZone": "us-east-2a",
+            "Description": "arn:aws:ecs:us-east-2:611925743950:attachment/b0a7f9dd-47db-44ef-a99a-c46a916b5487",
+            "Groups": [
+                {
+                    "GroupId": "sg-05a386104cfc7edc3",
+                    "GroupName": "launch-wizard-1"
+                }
+            ],
+            "InterfaceType": "interface",
+            "Ipv6Addresses": [],
+            "MacAddress": "02:a2:db:97:dc:5d",
+            "NetworkInterfaceId": "eni-07eec80542a98237d",
+            "OwnerId": "611925743950",
+            "PrivateDnsName": "ip-172-31-14-26.us-east-2.compute.internal",
+            "PublicDnsName": "ec2-3-145-102-104.us-east-2.compute.amazonaws.com",
+            "PublicIpDnsNameOptions": {
+                "DnsHostnameType": "public-ipv4-dns-name",
+                "PublicIpv4DnsName": "ec2-3-145-102-104.us-east-2.compute.amazonaws.com"
+            },
+            "PrivateIpAddress": "172.31.14.26",
+            "PrivateIpAddresses": [
+                {
+                    "Association": {
+                        "IpOwnerId": "amazon",
+                        "PublicDnsName": "ec2-3-145-102-104.us-east-2.compute.amazonaws.com",
+                        "PublicIp": "3.145.102.104"
+                    },
+                    "Primary": true,
+                    "PrivateDnsName": "ip-172-31-14-26.us-east-2.compute.internal",
+                    "PrivateIpAddress": "172.31.14.26"
+                }
+            ],
+            "RequesterId": "975259786086",
+            "RequesterManaged": true,
+            "SourceDestCheck": true,
+            "Status": "in-use",
+            "SubnetId": "subnet-0d2b7ff228b5c60dc",
+            "TagSet": [],
+            "VpcId": "vpc-08049f0d6c356cca8",
+            "Operator": {
+                "Managed": false
+            },
+            "AvailabilityZoneId": "use2-az1"
+        }
+    ]
+}

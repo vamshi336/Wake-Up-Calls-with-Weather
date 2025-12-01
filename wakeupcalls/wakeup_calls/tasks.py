@@ -186,33 +186,40 @@ def update_next_execution_time(wakeup_call: WakeUpCall):
     Args:
         wakeup_call: WakeUpCall instance to update
     """
+    from zoneinfo import ZoneInfo
     current_time = timezone.now()
     scheduled_time = wakeup_call.scheduled_time
-    
+    user_tz_str = getattr(wakeup_call.user, 'timezone', 'UTC')
+    try:
+        user_tz = ZoneInfo(user_tz_str)
+    except Exception:
+        user_tz = ZoneInfo('UTC')
+
+    def local_to_utc(date, time):
+        local_dt = datetime.combine(date, time)
+        local_dt = local_dt.replace(tzinfo=user_tz)
+        return local_dt.astimezone(ZoneInfo('UTC'))
+
     if wakeup_call.frequency == 'once':
         # One-time call, mark as completed
         wakeup_call.status = 'completed'
         wakeup_call.next_execution = None
-    
+
     elif wakeup_call.frequency == 'daily':
         # Daily calls
-        next_date = current_time.date() + timedelta(days=1)
-        wakeup_call.next_execution = timezone.make_aware(
-            datetime.combine(next_date, scheduled_time)
-        )
-    
+        next_date = current_time.astimezone(user_tz).date() + timedelta(days=1)
+        wakeup_call.next_execution = local_to_utc(next_date, scheduled_time)
+
     elif wakeup_call.frequency == 'weekly':
         # Weekly calls
-        next_date = current_time.date() + timedelta(days=7)
-        wakeup_call.next_execution = timezone.make_aware(
-            datetime.combine(next_date, scheduled_time)
-        )
-    
+        next_date = current_time.astimezone(user_tz).date() + timedelta(days=7)
+        wakeup_call.next_execution = local_to_utc(next_date, scheduled_time)
+
     elif wakeup_call.frequency in ['weekdays', 'weekends', 'custom']:
         # Find next valid day
-        next_date = current_time.date() + timedelta(days=1)
+        next_date = current_time.astimezone(user_tz).date() + timedelta(days=1)
         max_days_ahead = 7  # Don't look more than a week ahead
-        
+
         for _ in range(max_days_ahead):
             temp_call = WakeUpCall(
                 frequency=wakeup_call.frequency,
@@ -225,13 +232,11 @@ def update_next_execution_time(wakeup_call: WakeUpCall):
                 sunday=wakeup_call.sunday,
                 start_date=next_date
             )
-            
+
             if temp_call.should_execute_today():
-                wakeup_call.next_execution = timezone.make_aware(
-                    datetime.combine(next_date, scheduled_time)
-                )
+                wakeup_call.next_execution = local_to_utc(next_date, scheduled_time)
                 break
-            
+
             next_date += timedelta(days=1)
         else:
             # No valid day found in the next week

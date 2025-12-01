@@ -25,10 +25,16 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-*z1msr4n)n-31rkjeiovc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = ['*']
+
+
 
 
 # Application definition
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,6 +59,14 @@ INSTALLED_APPS = [
     'weather',
     'web',
 ]
+import json
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://localhost:8000').split(',')
+# CORS_ALLOWED_ORIGINS = json.loads(config('CORS_ALLOWED_ORIGINS', default='["https://9005b95232fc.ngrok-free.app", "http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000", "http://18.225.6.102:8000"]'))
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='https://9005b95232fc.ngrok-free.app,http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000,http://18.225.6.102:8000').split(',')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -160,11 +174,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -175,15 +184,43 @@ TWILIO_PHONE_NUMBER = config('TWILIO_PHONE_NUMBER', default='')
 
 # Weather API Configuration
 WEATHER_API_KEY = config('WEATHER_API_KEY', default='')
-
 # Celery Configuration
-CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
+# Auto-detect Upstash Redis and use SSL
+redis_url = config('REDIS_URL', default='redis://localhost:6379/0')
+# Clean up URL - remove trailing slashes
+redis_url = redis_url.rstrip('/').rstrip(':')
+# Convert redis:// to rediss:// for Upstash (SSL required)
+if 'upstash.io' in redis_url and redis_url.startswith('redis://'):
+    redis_url = redis_url.replace('redis://', 'rediss://', 1)
+# Ensure ssl_cert_reqs is present for rediss URLs (Celery requirement)
+if redis_url.startswith('rediss://') and 'ssl_cert_reqs' not in redis_url:
+    if '?' in redis_url:
+        redis_url += '&ssl_cert_reqs=CERT_NONE'
+    else:
+        redis_url += '?ssl_cert_reqs=CERT_NONE'
+ 
+CELERY_BROKER_URL = redis_url
+CELERY_RESULT_BACKEND = redis_url
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
-
+ 
+# SSL Configuration for Upstash Redis
+if 'rediss://' in redis_url:
+    CELERY_BROKER_TRANSPORT_OPTIONS = {
+        'ssl_cert_reqs': 'CERT_NONE',
+        'ssl_ca_certs': None,
+        'ssl_certfile': None,
+        'ssl_keyfile': None,
+    }
+    CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
+        'ssl_cert_reqs': 'CERT_NONE',
+        'ssl_ca_certs': None,
+        'ssl_certfile': None,
+        'ssl_keyfile': None,
+    }
+ 
 # Celery Beat Configuration
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 

@@ -95,7 +95,7 @@ class WakeUpCallDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(response_data)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def update_wakeup_call_status(request, pk):
     """
     DEPRECATED: Use PATCH /api/wakeup-calls/{id}/ instead.
@@ -128,7 +128,7 @@ def update_wakeup_call_status(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def update_wakeup_call_schedule(request, pk):
     """Web view to update wake-up call schedule from HTML form."""
     from django.contrib import messages
@@ -163,7 +163,7 @@ def update_wakeup_call_schedule(request, pk):
     return redirect('web:wakeup_call_detail', pk=pk)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def update_wakeup_call_contact_method(request, pk):
     """Web view to update wake-up call contact method from HTML form."""
     from django.contrib import messages
@@ -283,7 +283,7 @@ def twiml_wakeup_call(request, execution_id):
 
 
 @csrf_exempt
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([permissions.AllowAny])
 def twiml_wakeup_call_response(request, execution_id):
     """
@@ -370,7 +370,7 @@ def wakeup_call_stats(request):
     return Response(stats)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([permissions.IsAuthenticated])
 def test_wakeup_call_now(request, pk):
     """

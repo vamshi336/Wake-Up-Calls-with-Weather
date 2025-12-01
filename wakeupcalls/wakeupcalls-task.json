@@ -1,0 +1,59 @@
+{
+  "family": "wakeupcalls-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::611925743950:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "wakeupcalls",
+      "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+      "essential": true,
+      "portMappings": [{"containerPort": 8000, "protocol": "tcp"}],
+      "command": ["gunicorn"],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/wakeupcalls",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "cpu": 256,
+      "memory": 512
+    },
+    {
+      "name": "celery_worker",
+      "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+      "essential": true,
+      "command": ["celery_worker"],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/wakeupcalls",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "cpu": 512,
+      "memory": 512
+    },
+    {
+      "name": "celery_beat",
+      "image": "611925743950.dkr.ecr.us-east-2.amazonaws.com/wakeupcalls:latest",
+      "essential": true,
+      "command": ["celery_beat"],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/wakeupcalls",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "cpu": 256,
+      "memory": 256
+    }
+  ]
+}
